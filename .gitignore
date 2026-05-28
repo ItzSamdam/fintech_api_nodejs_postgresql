@@ -1,0 +1,13 @@
+node_modules/
+.env
+.eslintcache
+logs/
+.idea/
+build/
+.vscode/
+.cache/
+
+.codegpt
+pnpm-workspace.yaml
+
+dummy_data

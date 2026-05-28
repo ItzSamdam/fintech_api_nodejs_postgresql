@@ -1,0 +1,10 @@
+export {default as CustomException} from '@/shared/exceptions/CustomException';
+export * from '@/shared/exceptions/ServerException';
+export * from '@/shared/exceptions/BadRequestException';
+export * from '@/shared/exceptions/ForbiddenException';
+export * from '@/shared/exceptions/ConflictException';
+export * from '@/shared/exceptions/NotFoundException';
+export * from '@/shared/exceptions/TokenException';
+export * from '@/shared/exceptions/NoTokenException';
+export * from '@/shared/exceptions/ProviderException';
+export * from '@/shared/exceptions/ApiError';

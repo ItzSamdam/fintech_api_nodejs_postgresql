@@ -1,0 +1,105 @@
+// Permission actions for different pages and endpoints in the application
+// This file contains the constants for all the actions that can be performed on different pages and endpoints
+// and the permissions required to access them.
+// Each action is represented by a string constant, and the permissions are grouped by page or endpoint.
+// Actions here are used to check if a user has the required permissions to access a specific page or perform a specific action.
+
+/** All pages permission */
+export const ALL_PAGES_ACTIONS = {
+  DASHBOARD_PAGE: 'DASHBOARD_PAGE',
+  ANALYTICS_PAGE: 'ANALYTICS_PAGE',
+  CUSTOMERS_PAGE: 'CUSTOMERS_PAGE',
+  ORDERS_PAGE: 'ORDERS_PAGE',
+  PAYMENTS_PAGE: 'PAYMENTS_PAGE',
+  TRANSACTIONS_PAGE: 'TRANSACTIONS_PAGE',
+  PRODUCTS_PAGE: 'PRODUCTS_PAGE',
+  RATES_PAGE: 'RATES_PAGE',
+  MANAGERS_PAGE: 'MANAGERS_PAGE',
+  STUDENT_AMBASSADORS_PAGE: 'STUDENT_AMBASSADORS_PAGE',
+  ACQUISITIONS_PAGE: 'ACQUISITIONS_PAGE',
+};
+
+/** Dashboard endpoints actions */
+export const DASHBOARD_ACTIONS = {
+  VIEW_DASHBOARD_STATS: 'VIEW_DASHBOARD_STATS',
+  VIEW_OUTSTANDING_BALANCE: 'VIEW_OUTSTANDING_BALANCE',
+};
+
+/** Customers endpoints actions */
+export const CUSTOMERS_ACTIONS = {
+  VIEW_ALL_CUSTOMERS: 'VIEW_ALL_CUSTOMERS',
+  EXPORT_CUSTOMERS_DATA: 'EXPORT_CUSTOMERS_DATA',
+  VIEW_CUSTOMER_DETAILS: 'VIEW_CUSTOMER_DETAILS',
+  VIEW_CUSTOMER_TRANSACTION: 'VIEW_CUSTOMER_TRANSACTION',
+  VIEW_CUSTOMER_NOTE: 'VIEW_CUSTOMER_NOTE',
+  ADD_CUSTOMER_NOTE: 'ADD_CUSTOMER_NOTE',
+  VIEW_ALL_FOLLOW_UP: 'VIEW_ALL_FOLLOW_UP', // get all untransacted customers
+  VIEW_ALL_ACTIVATIONS: 'VIEW_ALL_ACTIVATIONS', // get all unverified customers
+  RESET_CUSTOMER_ACCESS_CODE: 'RESET_CUSTOMER_ACCESS_CODE', // NEW
+  VIEW_CUSTOMER_KYC: 'VIEW_CUSTOMER_KYC', // NEW
+  VIEW_FULL_CUSTOMER_KYC: 'VIEW_FULL_CUSTOMER_KYC', // NEW
+};
+
+/** Orders endpoints actions */
+export const ORDERS_ACTIONS = {
+  VIEW_ALL_ORDERS: 'VIEW_ALL_ORDERS',
+  UPDATE_ORDER: 'UPDATE_ORDER',
+  DISBURSE_ORDER_FUND: 'DISBURSE_ORDER_FUND',
+  EXPORT_ORDERS_DATA: 'EXPORT_ORDERS_DATA',
+};
+
+/** Payments endpoints actions */
+export const PAYMENTS_ACTIONS = {
+  VIEW_PAYOUT_REQUESTS: 'VIEW_PAYOUT_REQUESTS',
+  EXPORT_PAYOUT_REQUESTS: 'EXPORT_PAYOUT_REQUESTS',
+  UPDATE_PAYOUT_REQUESTS: 'UPDATE_PAYOUT_REQUESTS',
+  PROCESS_REFUND: 'PROCESS_REFUND',
+  VIEW_CREDIT_ACTIVITIES: 'VIEW_CREDIT_ACTIVITIES',
+};
+
+/** Transactions endpoints actions */
+export const TRANSACTIONS_ACTIONS = {
+  VIEW_PLATFORM_TRANSACTIONS: 'VIEW_PLATFORM_TRANSACTIONS',
+};
+
+/** Products endpoints actions */
+export const PRODUCTS_ACTIONS = {
+  VIEW_ALL_PRODUCTS: 'VIEW_PRODUCTS',
+  ADD_PRODUCT: 'ADD_PRODUCT',
+  UPDATE_PRODUCT: 'UPDATE_PRODUCT',
+  VIEW_ALL_PRODUCT_RATES: 'VIEW_ALL_PRODUCT_RATES',
+  ADD_PRODUCT_RATE: 'ADD_PRODUCT_RATE',
+  UPDATE_PRODUCT_RATE: 'UPDATE_PRODUCT_RATE',
+  DELETE_PRODUCT: 'DELETE_PRODUCT', // NEW //can delete both rate and product
+};
+
+/** Manager endpoints actions */
+export const MANAGERS_ACTIONS = {
+  VIEW_ALL_MANAGERS: 'VIEW_ALL_MANAGER',
+  ADD_MANAGER: 'ADD_MANAGER',
+  UPDATE_MANAGER: 'UPDATE_MANAGER',
+  DEACTIVATE_MANAGER: 'DEACTIVATE_MANAGER', // can also reset password
+  ASSIGN_MANAGER_PERMISSION: 'ASSIGN_MANAGER_PERMISSION', // can assign and also manage permissions
+  SUPER_ADMIN_ACCESS: 'SUPER_ADMIN_ACCESS',
+  DIRECT_LOGIN_ACCESS: 'DIRECT_LOGIN_ACCESS', // NEW //not tied to any endpoint
+  VIEW_LOGIN_ACTIVITY: 'VIEW_LOGIN_ACTIVITY', // NEW //
+};
+
+/** Analytics endpoints actions */
+export const ANALYTICS_ACTIONS = {
+  VIEW_CUSTOMERS_ANALYTICS: 'VIEW_CUSTOMERS_ANALYTICS',
+  VIEW_ASSETS_ANALYTICS: 'VIEW_ASSETS_ANALYTICS',
+};
+
+/** Application endpoints actions */
+export const APPLICATIONS_ACTIONS = {
+  VIEW_ALL_STUDENT_APPLICATIONS: 'VIEW_ALL_STUDENT_APPLICATIONS',
+  EXPORT_STUDENT_APPLICATIONS: 'EXPORT_STUDENT_APPLICATIONS',
+};
+
+/** Providers endpoints actions */
+export const PROVIDERS_ACTIONS = {
+  // ALL NEW
+  VIEW_PROVIDERS: 'VIEW_PROVIDERS',
+  MANAGE_PROVIDERS: 'MANAGE_PROVIDERS',
+};

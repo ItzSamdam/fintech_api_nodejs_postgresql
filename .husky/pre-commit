@@ -1,0 +1,10 @@
+#!/bin/sh
+# husky-pre-commit
+
+echo "Running APIs lint-staged..."
+if pnpm exec lint-staged --config ./lint-staged.config.js; then
+  echo "APIs lint-staged complete ✅"
+else
+  echo "APIs lint-staged failed ❌"
+  exit 1
+fi
