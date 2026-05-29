@@ -1,5 +1,8 @@
 import { type Application } from "express";
 
+/**
+ * This is the abstract class and must not be instantiated
+ */
 abstract class BaseRoutesConfig {
     protected app: Application;
     protected name: string;

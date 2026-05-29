@@ -29,10 +29,6 @@ const envSchema = z.object({
   ENCRYPTION_KEY: z.string(),
 
   DOMAIN_NAME: z.string().default("MyBackend"),
-
-  GOOGLE_CLIENT_ID: z.string(),
-  GOOGLE_CLIENT_SECRET: z.string(),
-  GOOGLE_CALLBACK_URL: z.string(),
 });
 
 type EnvVars = z.infer<typeof envSchema>;
@@ -52,11 +48,6 @@ export const config = {
     logFolder: envVar.LOG_FOLDER,
     logFile: envVar.LOG_FILE,
     logLevel: envVar.LOG_LEVEL,
-  },
-  google: {
-    clientId: envVar.GOOGLE_CLIENT_ID,
-    clientSecret: envVar.GOOGLE_CLIENT_SECRET,
-    callbackUrl: envVar.GOOGLE_CALLBACK_URL,
   },
   jwt: {
     secret: envVar.JWT_SECRET,
