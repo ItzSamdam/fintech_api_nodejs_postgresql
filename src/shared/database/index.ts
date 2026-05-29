@@ -17,13 +17,13 @@ const sequelize = new Sequelize({
     acquire: 30000,
     idle: 10000,
   },
-  logging: process.env.NODE_ENV === "development"
+  logging: config.serverEnv === "development"
     ? (msg: any) => logger.debug(msg)
     : false,
   timezone: "+00:00", // ✅ Store everything in UTC
   dialectOptions: {
     useUTC: true, // ✅ Ensure Postgres stores in UTC
-    ssl: process.env.NODE_ENV === "production"
+    ssl: config.serverEnv === "production"
       ? {
         require: true,
         rejectUnauthorized: false
@@ -40,7 +40,7 @@ export async function initDatabase(): Promise<void> {
     logger.info("✅ Database connection established successfully.");
 
     // In production, rely on migrations instead of sync
-    if (process.env.NODE_ENV !== "production") {
+    if (config.serverEnv !== "production") {
       await sequelize.sync({ force: false });
       logger.info("✅ Database synced (dev mode).");
     }
