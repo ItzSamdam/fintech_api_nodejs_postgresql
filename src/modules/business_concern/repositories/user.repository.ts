@@ -16,7 +16,8 @@ export class UserRepository {
     }
 
     async softDelete(id: string, transaction?: Transaction): Promise<number> {
-        return await User.update({ deletedAt: new Date() }, { where: { id }, transaction });
+        const [affectedCount] = await User.update({ deletedAt: new Date() }, { where: { id }, transaction });
+        return affectedCount;
     }
 
     async getById(id: string): Promise<User | null> {
