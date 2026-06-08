@@ -5,7 +5,7 @@ export { default as AutoRoundup } from '@/shared/database/models/auto-roundup.mo
 export { default as BillDetail } from '@/shared/database/models/bill-detail.model';
 export { default as FeeConfig } from '@/shared/database/models/fee-config.model';
 export { default as Kyc } from '@/shared/database/models/kyc.model';
-export { default as Otp } from '@/shared/database/models/otp.model';
+export { default as OTP } from '@/shared/database/models/otp.model';
 export { default as Provider } from '@/shared/database/models/provider.model';
 export { default as ProviderLog } from '@/shared/database/models/provider-log.model';
 export { default as Role } from '@/shared/database/models/role.model';
