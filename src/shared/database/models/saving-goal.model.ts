@@ -13,9 +13,9 @@ import {
   AfterUpdate,
 } from 'sequelize-typescript';
 import { v4 as uuidv4 } from 'uuid';
-import UserModel from '@/shared/database/models/user.model';
-import SavingsContributionModel from '@/shared/database/models/saving-contribution.model';
-import TransactionModel from '@/shared/database/models/transaction.model';
+import User from '@/shared/database/models/user.model';
+import SavingsContribution from '@/shared/database/models/saving-contribution.model';
+import Transaction from '@/shared/database/models/transaction.model';
 
 @Table({
   tableName: 'savings_goals',
@@ -23,7 +23,7 @@ import TransactionModel from '@/shared/database/models/transaction.model';
   underscored: true,
   modelName: 'SavingsGoal',
 })
-export default class SavingsGoalModel extends Model {
+export default class SavingsGoal extends Model {
   @Column({
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4,
@@ -33,7 +33,7 @@ export default class SavingsGoalModel extends Model {
   id!: string;
 
   @Index
-  @ForeignKey(() => UserModel)
+  @ForeignKey(() => User)
   @Column({
     type: DataType.UUID,
     allowNull: false,
@@ -136,22 +136,22 @@ export default class SavingsGoalModel extends Model {
   updatedAt!: Date;
 
   // Associations
-  @BelongsTo(() => UserModel)
-  user!: UserModel;
+  @BelongsTo(() => User)
+  user!: User;
 
-  @HasMany(() => SavingsContributionModel)
-  contributions!: SavingsContributionModel[];
+  @HasMany(() => SavingsContribution)
+  contributions!: SavingsContribution[];
 
   // NOTE: The original Go struct had `Transactions []Transaction gorm:"foreignKey:ID"`
   // That seems incorrect (foreign key would be Transaction.ID). 
   // Assuming the intended foreign key is `savings_goal_id` on Transaction.
   // We'll define a HasMany with foreignKey: 'savingsGoalId' – adjust if different.
-  @HasMany(() => TransactionModel, 'savingsGoalId')
-  transactions!: TransactionModel[];
+  @HasMany(() => Transaction, 'savingsGoalId')
+  transactions!: Transaction[];
 
   // Hooks
   @BeforeCreate
-  static setTargetDate(instance: SavingsGoalModel):void {
+  static setTargetDate(instance: SavingsGoal):void {
     if (!instance.id) {
       instance.id = uuidv4();
     }
@@ -163,7 +163,7 @@ export default class SavingsGoalModel extends Model {
   }
 
   @AfterUpdate
-  static async checkCompletion(instance: SavingsGoalModel): Promise<void> {
+  static async checkCompletion(instance: SavingsGoal): Promise<void> {
     if (instance.currentAmount >= instance.targetAmount && instance.status === 'active') {
       instance.status = 'completed';
       await instance.save();

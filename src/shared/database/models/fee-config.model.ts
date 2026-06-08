@@ -14,7 +14,7 @@ import {
   underscored: true,
   modelName: 'FeeConfig',
 })
-export default class FeeConfigModel extends Model {
+export default class FeeConfig extends Model {
   @Column({
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4,

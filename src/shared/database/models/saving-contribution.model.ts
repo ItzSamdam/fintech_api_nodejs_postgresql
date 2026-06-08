@@ -9,8 +9,8 @@ import {
   ForeignKey,
   BelongsTo,
 } from 'sequelize-typescript';
-import SavingsGoalModel from '@/shared/database/models/saving-goal.model';
-import TransactionModel from '@/shared/database/models/transaction.model';
+import SavingsGoal from '@/shared/database/models/saving-goal.model';
+import Transaction from '@/shared/database/models/transaction.model';
 
 @Table({
   tableName: 'savings_contributions',
@@ -18,7 +18,7 @@ import TransactionModel from '@/shared/database/models/transaction.model';
   underscored: true,
   modelName: 'SavingsContribution',
 })
-export default class SavingsContributionModel extends Model {
+export default class SavingsContribution extends Model {
   @Column({
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4,
@@ -28,7 +28,7 @@ export default class SavingsContributionModel extends Model {
   id!: string;
 
   @Index
-  @ForeignKey(() => SavingsGoalModel)
+  @ForeignKey(() => SavingsGoal)
   @Column({
     type: DataType.UUID,
     allowNull: false,
@@ -36,7 +36,7 @@ export default class SavingsContributionModel extends Model {
   savingsGoalId!: string;
 
   @Unique
-  @ForeignKey(() => TransactionModel)
+  @ForeignKey(() => Transaction)
   @Column({
     type: DataType.UUID,
     allowNull: false,
@@ -79,9 +79,9 @@ export default class SavingsContributionModel extends Model {
   createdAt!: Date;
 
   // Associations
-  @BelongsTo(() => SavingsGoalModel)
-  savingsGoal!: SavingsGoalModel;
+  @BelongsTo(() => SavingsGoal)
+  savingsGoal!: SavingsGoal;
 
-  @BelongsTo(() => TransactionModel)
-  transaction!: TransactionModel;
+  @BelongsTo(() => Transaction)
+  transaction!: Transaction;
 }

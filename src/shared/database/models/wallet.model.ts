@@ -10,8 +10,8 @@ import {
   BelongsTo,
   HasMany,
 } from 'sequelize-typescript';
-import UserModel from '@/shared/database/models/user.model';
-import TransactionModel from '@/shared/database/models/transaction.model';
+import User from '@/shared/database/models/user.model';
+import Transaction from '@/shared/database/models/transaction.model';
 
 @Table({
   tableName: 'wallets',
@@ -19,7 +19,7 @@ import TransactionModel from '@/shared/database/models/transaction.model';
   underscored: true,
   modelName: 'Wallet',
 })
-export default class WalletModel extends Model {
+export default class Wallet extends Model {
   @Column({
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4,
@@ -29,7 +29,7 @@ export default class WalletModel extends Model {
   id!: string;
 
   @Unique
-  @ForeignKey(() => UserModel)
+  @ForeignKey(() => User)
   @Column({
     type: DataType.UUID,
     allowNull: false,
@@ -135,9 +135,9 @@ export default class WalletModel extends Model {
   updatedAt!: Date;
 
   // Associations
-  @BelongsTo(() => UserModel)
-  user!: UserModel;
+  @BelongsTo(() => User)
+  user!: User;
 
-  @HasMany(() => TransactionModel)
-  transactions!: TransactionModel[];
+  @HasMany(() => Transaction)
+  transactions!: Transaction[];
 }

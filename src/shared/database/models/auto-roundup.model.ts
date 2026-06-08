@@ -9,8 +9,8 @@ import {
   ForeignKey,
   BelongsTo,
 } from 'sequelize-typescript';
-import UserModel from '@/shared/database/models/user.model';
-import SavingsGoalModel from '@/shared/database/models/saving-goal.model';
+import User from '@/shared/database/models/user.model';
+import SavingsGoal from '@/shared/database/models/saving-goal.model';
 
 @Table({
   tableName: 'auto_roundups',
@@ -18,7 +18,7 @@ import SavingsGoalModel from '@/shared/database/models/saving-goal.model';
   underscored: true,
   modelName: 'AutoRoundup',
 })
-export default class AutoRoundupModel extends Model {
+export default class AutoRoundup extends Model {
   @Column({
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4,
@@ -28,14 +28,14 @@ export default class AutoRoundupModel extends Model {
   id!: string;
 
   @Unique
-  @ForeignKey(() => UserModel)
+  @ForeignKey(() => User)
   @Column({
     type: DataType.UUID,
     allowNull: false,
   })
   userId!: string;
 
-  @ForeignKey(() => SavingsGoalModel)
+  @ForeignKey(() => SavingsGoal)
   @Column({
     type: DataType.UUID,
     allowNull: false,
@@ -87,9 +87,9 @@ export default class AutoRoundupModel extends Model {
   updatedAt!: Date;
 
   // Associations
-  @BelongsTo(() => UserModel)
-  user!: UserModel;
+  @BelongsTo(() => User)
+  user!: User;
 
-  @BelongsTo(() => SavingsGoalModel)
-  savingsGoal!: SavingsGoalModel;
+  @BelongsTo(() => SavingsGoal)
+  savingsGoal!: SavingsGoal;
 }

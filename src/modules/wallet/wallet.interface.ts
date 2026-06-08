@@ -1,11 +1,11 @@
-import type WalletModel from "@/shared/database/models/wallet.model";
+import type Wallet from "@/shared/database/models/wallet.model";
 
 export interface WalletRepository {
-  create: (wallet: WalletModel) => Promise<void>;
-  update: (wallet: WalletModel) => Promise<void>;
-  getByID: (id: string) => Promise<WalletModel | null>;
-  getByUserID: (userID: string) => Promise<WalletModel | null>;
-  getByUserIDForUpdate: (userID: string) => Promise<WalletModel | null>;
+  create: (wallet: Wallet) => Promise<void>;
+  update: (wallet: Wallet) => Promise<void>;
+  getByID: (id: string) => Promise<Wallet | null>;
+  getByUserID: (userID: string) => Promise<Wallet | null>;
+  getByUserIDForUpdate: (userID: string) => Promise<Wallet | null>;
   debit: (walletID: string, amount: number, reference: string) => Promise<void>;
   credit: (walletID: string, amount: number, reference: string) => Promise<void>;
   lock: (walletID: string, reason: string) => Promise<void>;
@@ -19,5 +19,5 @@ export interface WalletRepository {
     offset: number,
     limit: number,
     filters: Record<string, any>
-  ) => Promise<{ wallets: WalletModel[]; total: number }>;
+  ) => Promise<{ wallets: Wallet[]; total: number }>;
 }

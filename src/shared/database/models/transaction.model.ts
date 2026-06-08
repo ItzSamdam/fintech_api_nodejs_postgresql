@@ -11,9 +11,9 @@ import {
   BelongsTo,
   HasOne,
 } from 'sequelize-typescript';
-import UserModel from '@/shared/database/models/user.model';
-import WalletModel from '@/shared/database/models/wallet.model';
-import TransferDetailModel from '@/shared/database/models/transfer-detail.model';
+import User from '@/shared/database/models/user.model';
+import Wallet from '@/shared/database/models/wallet.model';
+import TransferDetail from '@/shared/database/models/transfer-detail.model';
 
 @Table({
   tableName: 'transactions',
@@ -21,7 +21,7 @@ import TransferDetailModel from '@/shared/database/models/transfer-detail.model'
   underscored: true,
   modelName: 'Transaction',
 })
-export default class TransactionModel extends Model {
+export default class Transaction extends Model {
   @Column({
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4,
@@ -38,7 +38,7 @@ export default class TransactionModel extends Model {
   reference!: string;
 
   @Index
-  @ForeignKey(() => WalletModel)
+  @ForeignKey(() => Wallet)
   @Column({
     type: DataType.UUID,
     allowNull: false,
@@ -46,7 +46,7 @@ export default class TransactionModel extends Model {
   walletId!: string;
 
   @Index
-  @ForeignKey(() => UserModel)
+  @ForeignKey(() => User)
   @Column({
     type: DataType.UUID,
     allowNull: false,
@@ -198,12 +198,12 @@ export default class TransactionModel extends Model {
   updatedAt!: Date;
 
   // Associations
-  @BelongsTo(() => WalletModel)
-  wallet!: WalletModel;
+  @BelongsTo(() => Wallet)
+  wallet!: Wallet;
 
-  @BelongsTo(() => UserModel)
-  user!: UserModel;
+  @BelongsTo(() => User)
+  user!: User;
 
-  @HasOne(() => TransferDetailModel, 'transactionId')
-  transferDetail!: TransferDetailModel | null;
+  @HasOne(() => TransferDetail, 'transactionId')
+  transferDetail!: TransferDetail | null;
 }

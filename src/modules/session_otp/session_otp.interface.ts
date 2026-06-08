@@ -1,11 +1,11 @@
-import type OTPModel from "@/shared/database/models/otp.model";
-import type SessionModel from "@/shared/database/models/session.model";
+import type OTP from "@/shared/database/models/otp.model";
+import type Session from "@/shared/database/models/session.model";
 
 export interface SessionRepository {
-  create: (session: SessionModel) => Promise<void>;
-  update: (session: SessionModel) => Promise<void>;
-  getByToken: (token: string) => Promise<SessionModel | null>;
-  getByUserID: (userID: string) => Promise<SessionModel[]>;
+  create: (session: Session) => Promise<void>;
+  update: (session: Session) => Promise<void>;
+  getByToken: (token: string) => Promise<Session | null>;
+  getByUserID: (userID: string) => Promise<Session[]>;
   invalidate: (sessionID: string) => Promise<void>;
   invalidateAllUserSessions: (userID: string) => Promise<void>;
   cleanupExpired: () => Promise<void>;
@@ -14,12 +14,12 @@ export interface SessionRepository {
 
 // OTPRepository interface
 export interface OTPRepository {
-  create: (otp: OTPModel) => Promise<void>;
+  create: (otp: OTP) => Promise<void>;
   getValidOTP: (
     phoneNumber: string,
     code: string,
     purpose: string
-  ) => Promise<OTPModel | null>;
+  ) => Promise<OTP | null>;
   markAsUsed: (id: string) => Promise<void>;
   incrementAttempts: (id: string) => Promise<void>;
   invalidateByPhoneNumber: (
