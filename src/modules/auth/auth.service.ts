@@ -1,12 +1,12 @@
 import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcrypt";
 import jwt, { type SignOptions } from "jsonwebtoken";
-import { type SMSService } from "@/modules/business_concern/registry/termii.client.registry";
-import { type UserRepository } from "@/modules/business_concern/repositories/user.repository";
-import { type KYCRepository } from "@/modules/business_concern/repositories/kyc.repository";
-import { type SessionRepository } from "@/modules/business_concern/repositories/session.repository";
-import { type OTPRepository } from "@/modules/business_concern/repositories/otp.repository";
-import { type WalletRepository } from "@/modules/business_concern/repositories/wallet.repository";
+import { type SMSService } from "@/modules/_business/registry/termii.client.registry";
+import { type UserRepository } from "@/modules/_business/repositories/user.repository";
+import { type KYCRepository } from "@/modules/_business/repositories/kyc.repository";
+import { type SessionRepository } from "@/modules/_business/repositories/session.repository";
+import { type OTPRepository } from "@/modules/_business/repositories/otp.repository";
+import { type WalletRepository } from "@/modules/_business/repositories/wallet.repository";
 import { config } from "@/shared/config/dev";
 
 export class AuthService {
