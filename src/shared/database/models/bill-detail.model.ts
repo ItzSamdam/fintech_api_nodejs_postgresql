@@ -9,8 +9,8 @@ import {
   ForeignKey,
   BelongsTo,
 } from 'sequelize-typescript';
-import TransactionModel from '@/shared/database/models/transaction.model';
-import ProviderModel from '@/shared/database/models/provider.model';
+import Transaction from '@/shared/database/models/transaction.model';
+import Provider from '@/shared/database/models/provider.model';
 
 @Table({
   tableName: 'bill_details',
@@ -18,7 +18,7 @@ import ProviderModel from '@/shared/database/models/provider.model';
   underscored: true,
   modelName: 'BillDetail',
 })
-export default class BillDetailModel extends Model {
+export default class BillDetail extends Model {
   @Column({
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4,
@@ -28,7 +28,7 @@ export default class BillDetailModel extends Model {
   id!: string;
 
   @Unique
-  @ForeignKey(() => TransactionModel)
+  @ForeignKey(() => Transaction)
   @Column({
     type: DataType.UUID,
     allowNull: false,
@@ -43,7 +43,7 @@ export default class BillDetailModel extends Model {
   billType!: string;          // airtime, data, electricity, betting
 
   @Index
-  @ForeignKey(() => ProviderModel)
+  @ForeignKey(() => Provider)
   @Column({
     type: DataType.UUID,
     allowNull: false,
@@ -144,10 +144,10 @@ export default class BillDetailModel extends Model {
   createdAt!: Date;
 
   // Associations
-  @BelongsTo(() => TransactionModel)
-  transaction!: TransactionModel;
+  @BelongsTo(() => Transaction)
+  transaction!: Transaction;
 
-  @BelongsTo(() => ProviderModel)
-  provider!: ProviderModel;
+  @BelongsTo(() => Provider)
+  provider!: Provider;
 
 }

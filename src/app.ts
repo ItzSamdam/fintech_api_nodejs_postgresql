@@ -26,7 +26,7 @@ app.get('/health', (_req: Request, res: Response) => {
 
   return res.json({
     status: true,
-    message: 'Fintech API is up and running',
+    message: 'Fintech Demo API is up and running',
     data: allEndpoints
   });
 });

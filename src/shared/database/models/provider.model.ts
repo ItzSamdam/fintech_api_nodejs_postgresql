@@ -9,8 +9,8 @@ import {
   Index,
   HasMany,
 } from 'sequelize-typescript';
-import BillDetailModel from '@/shared/database/models/bill-detail.model';
-import ProviderLogModel from '@/shared/database/models/provider-log.model';
+import BillDetail from '@/shared/database/models/bill-detail.model';
+import ProviderLog from '@/shared/database/models/provider-log.model';
 
 @Table({
   tableName: 'providers',
@@ -18,7 +18,7 @@ import ProviderLogModel from '@/shared/database/models/provider-log.model';
   underscored: true,
   modelName: 'Provider',
 })
-export default class ProviderModel extends Model {
+export default class Provider extends Model {
   @Column({
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4,
@@ -142,9 +142,9 @@ export default class ProviderModel extends Model {
   updatedAt!: Date;
 
   // Associations
-  @HasMany(() => BillDetailModel)
-  billDetails!: BillDetailModel[];
+  @HasMany(() => BillDetail)
+  billDetails!: BillDetail[];
 
-  @HasMany(() => ProviderLogModel)
-  providerLogs!: ProviderLogModel[];
+  @HasMany(() => ProviderLog)
+  providerLogs!: ProviderLog[];
 }

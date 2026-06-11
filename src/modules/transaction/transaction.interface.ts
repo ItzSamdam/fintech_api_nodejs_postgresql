@@ -1,5 +1,5 @@
-import type TransactionModel from "@/shared/database/models/transaction.model";
-import type TransferDetailModel from "@/shared/database/models/transfer-detail.model";
+import type Transaction from "@/shared/database/models/transaction.model";
+import type TransferDetail from "@/shared/database/models/transfer-detail.model";
 
 export interface TransactionSummary {
   totalCount: number;
@@ -21,28 +21,28 @@ export interface AdminTransactionSummary {
 
 
 export interface TransactionRepository {
-  create: (transaction: TransactionModel) => Promise<void>;
-  update: (transaction: TransactionModel) => Promise<void>;
-  getByID: (id: string) => Promise<TransactionModel | null>;
-  getByReference: (reference: string) => Promise<TransactionModel | null>;
+  create: (transaction: Transaction) => Promise<void>;
+  update: (transaction: Transaction) => Promise<void>;
+  getByID: (id: string) => Promise<Transaction | null>;
+  getByReference: (reference: string) => Promise<Transaction | null>;
   getByWalletID: (
     walletID: string,
     offset: number,
     limit: number,
     filters: Record<string, any>
-  ) => Promise<{ transactions: TransactionModel[]; total: number }>;
+  ) => Promise<{ transactions: Transaction[]; total: number }>;
   getByUserID: (
     userID: string,
     offset: number,
     limit: number,
     filters: Record<string, any>
-  ) => Promise<{ transactions: TransactionModel[]; total: number }>;
+  ) => Promise<{ transactions: Transaction[]; total: number }>;
   getByCategory: (
     userID: string,
     category: string,
     offset: number,
     limit: number
-  ) => Promise<{ transactions: TransactionModel[]; total: number }>;
+  ) => Promise<{ transactions: Transaction[]; total: number }>;
   updateStatus: (
     reference: string,
     status: string,
@@ -59,17 +59,17 @@ export interface TransactionRepository {
     endDate: Date
   ) => Promise<AdminTransactionSummary | null>;
   getDailyVolume: (date: Date) => Promise<number>;
-  getPendingTransactions: () => Promise<TransactionModel[]>;
+  getPendingTransactions: () => Promise<Transaction[]>;
   markAsFailed: (reference: string, response: string) => Promise<void>;
 }
 
 // TransferDetailRepository interface
 export interface TransferDetailRepository {
-  create: (detail: TransferDetailModel) => Promise<void>;
-  getByTransactionID: (transactionID: string) => Promise<TransferDetailModel | null>;
+  create: (detail: TransferDetail) => Promise<void>;
+  getByTransactionID: (transactionID: string) => Promise<TransferDetail | null>;
   getByRecipientID: (
     recipientID: string,
     offset: number,
     limit: number
-  ) => Promise<{ details: TransferDetailModel[]; total: number }>;
+  ) => Promise<{ details: TransferDetail[]; total: number }>;
 }

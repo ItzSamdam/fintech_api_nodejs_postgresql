@@ -8,7 +8,7 @@ import {
   ForeignKey,
   BelongsTo,
 } from 'sequelize-typescript';
-import TransactionModel from '@/shared/database/models/transaction.model';
+import Transaction from '@/shared/database/models/transaction.model';
 
 @Table({
   tableName: 'transfer_details',
@@ -16,7 +16,7 @@ import TransactionModel from '@/shared/database/models/transaction.model';
   underscored: true,
   modelName: 'TransferDetail',
 })
-export default class TransferDetailModel extends Model {
+export default class TransferDetail extends Model {
   @Column({
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4,
@@ -26,7 +26,7 @@ export default class TransferDetailModel extends Model {
   id!: string;
 
   @Unique
-  @ForeignKey(() => TransactionModel)
+  @ForeignKey(() => Transaction)
   @Column({
     type: DataType.UUID,
     allowNull: false,
@@ -84,6 +84,6 @@ export default class TransferDetailModel extends Model {
   createdAt!: Date;
 
   // Association
-  @BelongsTo(() => TransactionModel)
-  transaction!: TransactionModel;
+  @BelongsTo(() => Transaction)
+  transaction!: Transaction;
 }

@@ -14,7 +14,7 @@ import {
   underscored: true,
   modelName: 'Role',
 })
-export default class RoleModel extends Model {
+export default class Role extends Model {
   @Column({
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4,

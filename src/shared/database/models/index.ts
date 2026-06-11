@@ -1,0 +1,23 @@
+// src/shared/database/models/index.ts
+export { default as AdminUser } from '@/shared/database/models/admin-users.model';
+export { default as AuditLog } from '@/shared/database/models/audit-log.model';
+export { default as AutoRoundup } from '@/shared/database/models/auto-roundup.model';
+export { default as BillDetail } from '@/shared/database/models/bill-detail.model';
+export { default as FeeConfig } from '@/shared/database/models/fee-config.model';
+export { default as KYC } from '@/shared/database/models/kyc.model';
+export { default as OTP } from '@/shared/database/models/otp.model';
+export { default as Provider } from '@/shared/database/models/provider.model';
+export { default as ProviderLog } from '@/shared/database/models/provider-log.model';
+export { default as Role } from '@/shared/database/models/role.model';
+export { default as SavingContribution } from '@/shared/database/models/saving-contribution.model';
+export { default as SavingGoal } from '@/shared/database/models/saving-goal.model';
+export { default as Session } from '@/shared/database/models/session.model';
+export { default as SupportTicket } from '@/shared/database/models/support-ticket.model';
+export { default as TicketMessage } from '@/shared/database/models/ticket-message.model';
+export { default as TierLimit } from '@/shared/database/models/tier-limit.model';
+export { default as Transaction } from '@/shared/database/models/transaction.model';
+export { default as TransferDetail } from '@/shared/database/models/transfer-detail.model';
+export { default as TrustedDevice } from '@/shared/database/models/trusted-device.model';
+export { default as Twofa } from '@/shared/database/models/twofa.model';
+export { default as User } from '@/shared/database/models/user.model';
+export { default as Wallet } from '@/shared/database/models/wallet.model';

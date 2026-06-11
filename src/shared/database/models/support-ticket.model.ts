@@ -10,9 +10,9 @@ import {
   BelongsTo,
   HasMany,
 } from 'sequelize-typescript';
-import UserModel from '@/shared/database/models/user.model';
-import AdminUserModel from '@/shared/database/models/admin-users.model'; // adjust path as needed
-import TicketMessageModel from '@/shared/database/models/ticket-message.model';
+import User from '@/shared/database/models/user.model';
+import AdminUser from '@/shared/database/models/admin-users.model'; // adjust path as needed
+import TicketMessage from '@/shared/database/models/ticket-message.model';
 
 @Table({
   tableName: 'support_tickets',
@@ -20,7 +20,7 @@ import TicketMessageModel from '@/shared/database/models/ticket-message.model';
   underscored: true,
   modelName: 'SupportTicket',
 })
-export default class SupportTicketModel extends Model {
+export default class SupportTicket extends Model {
   @Column({
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4,
@@ -30,7 +30,7 @@ export default class SupportTicketModel extends Model {
   id!: string;
 
   @Index
-  @ForeignKey(() => UserModel)
+  @ForeignKey(() => User)
   @Column({
     type: DataType.UUID,
     allowNull: false,
@@ -77,7 +77,7 @@ export default class SupportTicketModel extends Model {
   })
   status!: string; // open, in_progress, resolved, closed
 
-  @ForeignKey(() => AdminUserModel)
+  @ForeignKey(() => AdminUser)
   @Column({
     type: DataType.UUID,
     allowNull: true,
@@ -125,12 +125,12 @@ export default class SupportTicketModel extends Model {
   updatedAt!: Date;
 
   // Associations
-  @BelongsTo(() => UserModel)
-  user!: UserModel;
+  @BelongsTo(() => User)
+  user!: User;
 
-  @BelongsTo(() => AdminUserModel, { foreignKey: 'assignedTo' })
-  assignedAdmin!: AdminUserModel | null;
+  @BelongsTo(() => AdminUser, { foreignKey: 'assignedTo' })
+  assignedAdmin!: AdminUser | null;
 
-  @HasMany(() => TicketMessageModel)
-  messages!: TicketMessageModel[];
+  @HasMany(() => TicketMessage)
+  messages!: TicketMessage[];
 }

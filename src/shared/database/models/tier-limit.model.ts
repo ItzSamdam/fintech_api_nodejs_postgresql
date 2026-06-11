@@ -14,7 +14,7 @@ import {
   underscored: true,
   modelName: 'TierLimit',
 })
-export default class TierLimitModel extends Model {
+export default class TierLimit extends Model {
   @Column({
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4,

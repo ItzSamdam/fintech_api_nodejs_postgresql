@@ -18,7 +18,7 @@ import {
   paranoid: true,         // enables soft delete (uses deletedAt)
   modelName: 'User',
 })
-export default class UserModel extends Model {
+export default class User extends Model {
   @PrimaryKey
   @Column({
     type: DataType.UUID,

@@ -9,7 +9,7 @@ import {
   BelongsTo,
   ForeignKey,
 } from 'sequelize-typescript';
-import UserModel from '@/shared/database/models/user.model'; // adjust import path as needed
+import User from '@/shared/database/models/user.model'; // adjust import path as needed
 
 @Table({
   tableName: 'kycs',
@@ -18,7 +18,7 @@ import UserModel from '@/shared/database/models/user.model'; // adjust import pa
   paranoid: false,        // no soft delete (deletedAt not needed)
   modelName: 'KYC',
 })
-export default class KYCModel extends Model {
+export default class KYC extends Model {
   @Column({
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4,
@@ -28,7 +28,7 @@ export default class KYCModel extends Model {
   id!: string;
 
   @Unique // uniqueIndex: idx_kyc_user
-  @ForeignKey(() => UserModel)
+  @ForeignKey(() => User)
   @Column({
     type: DataType.UUID,
     allowNull: false,
@@ -135,6 +135,6 @@ export default class KYCModel extends Model {
   updatedAt!: Date;
 
   // Relationship: belongs to User
-  @BelongsTo(() => UserModel)
-  user!: UserModel;
+  @BelongsTo(() => User)
+  user!: User;
 }

@@ -8,7 +8,7 @@ import {
   ForeignKey,
   BelongsTo,
 } from 'sequelize-typescript';
-import ProviderModel from '@/shared/database/models/provider.model';
+import Provider from '@/shared/database/models/provider.model';
 
 @Table({
   tableName: 'provider_logs',
@@ -16,7 +16,7 @@ import ProviderModel from '@/shared/database/models/provider.model';
   underscored: true,
   modelName: 'ProviderLog',
 })
-export default class ProviderLogModel extends Model {
+export default class ProviderLog extends Model {
   @Column({
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4,
@@ -26,7 +26,7 @@ export default class ProviderLogModel extends Model {
   id!: string;
 
   @Index
-  @ForeignKey(() => ProviderModel)
+  @ForeignKey(() => Provider)
   @Column({
     type: DataType.UUID,
     allowNull: false,
@@ -92,7 +92,7 @@ export default class ProviderLogModel extends Model {
   createdAt!: Date;
 
   // Association
-  @BelongsTo(() => ProviderModel)
-  provider!: ProviderModel;
+  @BelongsTo(() => Provider)
+  provider!: Provider;
 
 }

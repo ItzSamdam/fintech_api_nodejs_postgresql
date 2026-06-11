@@ -13,7 +13,7 @@ import {
   underscored: true,
   modelName: 'OTP',
 })
-export default class OTPModel extends Model {
+export default class OTP extends Model {
   @Column({
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4,

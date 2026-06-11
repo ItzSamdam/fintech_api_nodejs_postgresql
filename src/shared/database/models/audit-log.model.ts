@@ -8,8 +8,8 @@ import {
   ForeignKey,
   BelongsTo,
 } from 'sequelize-typescript';
-import AdminUserModel from '@/shared/database/models/admin-users.model';
-import UserModel from '@/shared/database/models/user.model';
+import AdminUser from '@/shared/database/models/admin-users.model';
+import User from '@/shared/database/models/user.model';
 
 @Table({
   tableName: 'audit_logs',
@@ -17,7 +17,7 @@ import UserModel from '@/shared/database/models/user.model';
   underscored: true,
   modelName: 'AuditLog',
 })
-export default class AuditLogModel extends Model {
+export default class AuditLog extends Model {
   @Column({
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4,
@@ -27,7 +27,7 @@ export default class AuditLogModel extends Model {
   id!: string;
 
   @Index
-  @ForeignKey(() => AdminUserModel)
+  @ForeignKey(() => AdminUser)
   @Column({
     type: DataType.UUID,
     allowNull: true,
@@ -35,7 +35,7 @@ export default class AuditLogModel extends Model {
   adminId!: string | null;
 
   @Index
-  @ForeignKey(() => UserModel)
+  @ForeignKey(() => User)
   @Column({
     type: DataType.UUID,
     allowNull: true,
@@ -101,9 +101,9 @@ export default class AuditLogModel extends Model {
   createdAt!: Date;
 
   // Associations
-  @BelongsTo(() => AdminUserModel)
-  admin!: AdminUserModel | null;
+  @BelongsTo(() => AdminUser)
+  admin!: AdminUser | null;
 
-  @BelongsTo(() => UserModel)
-  user!: UserModel | null;
+  @BelongsTo(() => User)
+  user!: User | null;
 }

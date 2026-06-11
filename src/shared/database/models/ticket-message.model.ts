@@ -8,7 +8,7 @@ import {
   ForeignKey,
   BelongsTo,
 } from 'sequelize-typescript';
-import SupportTicketModel from '@/shared/database/models/support-ticket.model';
+import SupportTicket from '@/shared/database/models/support-ticket.model';
 
 @Table({
   tableName: 'ticket_messages',
@@ -16,7 +16,7 @@ import SupportTicketModel from '@/shared/database/models/support-ticket.model';
   underscored: true,
   modelName: 'TicketMessage',
 })
-export default class TicketMessageModel extends Model {
+export default class TicketMessage extends Model {
   @Column({
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4,
@@ -26,7 +26,7 @@ export default class TicketMessageModel extends Model {
   id!: string;
 
   @Index
-  @ForeignKey(() => SupportTicketModel)
+  @ForeignKey(() => SupportTicket)
   @Column({
     type: DataType.UUID,
     allowNull: false,
@@ -79,6 +79,6 @@ export default class TicketMessageModel extends Model {
   createdAt!: Date;
 
   // Association
-  @BelongsTo(() => SupportTicketModel)
-  ticket!: SupportTicketModel;
+  @BelongsTo(() => SupportTicket)
+  ticket!: SupportTicket;
 }

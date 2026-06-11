@@ -8,7 +8,7 @@ import {
   Unique,
   HasMany,
 } from 'sequelize-typescript';
-import AuditLogModel from '@/shared/database/models/audit-log.model';
+import AuditLog from '@/shared/database/models/audit-log.model';
 
 @Table({
   tableName: 'admin_users',
@@ -16,7 +16,7 @@ import AuditLogModel from '@/shared/database/models/audit-log.model';
   underscored: true,
   modelName: 'AdminUser',
 })
-export default class AdminUserModel extends Model {
+export default class AdminUser extends Model {
   @Column({
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4,
@@ -81,6 +81,6 @@ export default class AdminUserModel extends Model {
   updatedAt!: Date;
 
   // Relationships
-  @HasMany(() => AuditLogModel)
-  auditLogs!: AuditLogModel[];
+  @HasMany(() => AuditLog)
+  auditLogs!: AuditLog[];
 }

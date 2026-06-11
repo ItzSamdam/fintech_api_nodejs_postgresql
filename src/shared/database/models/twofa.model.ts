@@ -9,7 +9,7 @@ import {
   ForeignKey,
   BelongsTo,
 } from 'sequelize-typescript';
-import UserModel from '@/shared/database/models/user.model';
+import User from '@/shared/database/models/user.model';
 
 @Table({
   tableName: 'two_fas',
@@ -17,7 +17,7 @@ import UserModel from '@/shared/database/models/user.model';
   underscored: true,
   modelName: 'TwoFA',
 })
-export default class TwoFAModel extends Model {
+export default class TwoFA extends Model {
   @Column({
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4,
@@ -27,7 +27,7 @@ export default class TwoFAModel extends Model {
   id!: string;
 
   @Unique
-  @ForeignKey(() => UserModel)
+  @ForeignKey(() => User)
   @Column({
     type: DataType.UUID,
     allowNull: false,
@@ -75,6 +75,6 @@ export default class TwoFAModel extends Model {
   })
   updatedAt!: Date;
 
-  @BelongsTo(() => UserModel)
-  user!: UserModel;
+  @BelongsTo(() => User)
+  user!: User;
 }
