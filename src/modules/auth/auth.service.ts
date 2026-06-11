@@ -110,6 +110,25 @@ export class AuthService {
         };
     }
 
+    async getUserProfile(userId: string): Promise<any> {
+        const user = await this.userRepo.getById(userId);
+        if (!user) throw new Error("User not found");
+
+        return user;
+    }
+
+    async updateUserProfile(userId: string, data: any): Promise<void> {
+        const user = await this.userRepo.getById(userId);
+        if (!user) throw new Error("User not found");
+
+        user.firstName = data.firstName;
+        user.lastName = data.lastName;
+        user.email = data.email;
+        user.phoneNumber = data.phoneNumber;
+        user.gender = data.gender;
+        await this.userRepo.update(user);
+    }
+
     async changePassword(userId: string, oldPassword: string, newPassword: string): Promise<void> {
         const user = await this.userRepo.getById(userId);
         if (!user) throw new Error("User not found");
@@ -187,11 +206,10 @@ export class AuthService {
         const expiry = tokenType === "access" ? config.jwt.expiresIn : config.jwt.refreshTokenExpiresIn;
 
         const payload = {
-            user_id: user.id,
+            userId: user.id,
             phone: user.phoneNumber,
             email: user.email,
-            tier: user.tier,
-            token_type: tokenType,
+            tier: user.tier
         };
 
         const options: SignOptions = {

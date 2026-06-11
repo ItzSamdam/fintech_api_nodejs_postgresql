@@ -330,9 +330,10 @@ export class BillPaymentService {
         await this.transactionRepo.updateStatus(transaction.reference as string, "success", new Date());
     }
 
-    async getElectricityToken(req: any): Promise<any> {
-        const transaction = await this.transactionRepo.getByReference(req.reference as string);
+    async getElectricityToken(userId: string, transactionId: string): Promise<any> {
+        const transaction = await this.transactionRepo.getByID(transactionId);
         if (!transaction) throw new Error("Transaction not found");
+        if (transaction.userId !== userId) throw new Error("Unauthorized");
         const billDetail = await this.billDetailRepo.getByTransactionID(transaction.id);
         if (!billDetail) throw new Error("Bill detail not found");
 
@@ -371,6 +372,94 @@ export class BillPaymentService {
             isValid: true,
         };
     }
+
+    async fundBettingWallet(userId: string, req: any): Promise<TransactionResponse> {
+        const wallet = await this.walletRepo.getByUserIdForUpdate(userId);
+        if (!wallet) throw new Error("Wallet not found");
+        if (wallet.isLocked) throw new Error("Wallet is locked");
+
+        const fee = this.calculateBillFee("betting", req.amount as number);
+        const vat = Math.floor(fee * 0.075);
+        const totalAmount = req.amount + fee + vat;
+
+        if (wallet.balance < totalAmount) throw new Error("Insufficient balance");
+
+        const reference = this.generateReference("BET");
+
+        await this.walletRepo.debit(wallet.id, totalAmount as number);
+
+        const transaction = await this.transactionRepo.create({
+            reference,
+            walletId: wallet.id,
+            userId,
+            type: "debit",
+            category: "betting",
+            subCategory: req.network,
+            amount: req.amount,
+            fee,
+            vat,
+            totalAmount,
+            balanceBefore: wallet.balance,
+            balanceAfter: wallet.balance - totalAmount,
+            status: "processing",
+            description: `Betting wallet funding for ${req.phoneNumber}`,
+            createdAt: new Date(),
+        });
+
+        await this.billDetailRepo.create({
+            transactionId: transaction.id,
+            billType: "betting",
+            phoneNumber: req.phoneNumber,
+            providerName: req.network,
+        });
+
+        // Async external payment
+        void this.processBettingFunding(transaction, {
+            product: req.providerId as string,
+            customerId: req.customerId as string,
+            amount: req.amount as string,
+            phoneNo: req.phoneNo as string,
+            callbackUrl: this.callbackUrl,
+            reference: req.reference as string,
+        });
+
+        return this.mapTransactionToResponse(transaction);
+    }
+
+    private async processBettingFunding(transaction: any, req: {
+        product: string,
+        customerId: string,
+        amount: string,
+        phoneNo: string,
+        callbackUrl: string,
+        reference: string,
+    }): Promise<void> {
+        const resp = await this.redBiller.creditBetWallet(
+            req.product,
+            req.customerId,
+            req.amount,
+            req.phoneNo,
+            this.callbackUrl,
+            req.reference
+        );
+        if (!resp?.success) {
+            await this.transactionRepo.markAsFailed(transaction.reference as string, resp?.message ?? "Betting wallet funding failed");
+            return;
+        }
+
+        await this.transactionRepo.updateStatus(transaction.reference as string, "success", new Date());
+    }
+
+    async getBettingHistory(userId: string, offset: number, limit: number): Promise<{ transactions: TransactionResponse[]; total: number }> {
+        const { transactions } = await this.transactionRepo.getByCategory(userId, "betting", offset, limit);
+        return { transactions: transactions.map((t: any) => this.mapTransactionToResponse(t)), total: transactions.length };
+    }
+
+    async getBillHistory(userId: string, offset: number, limit: number): Promise<{ transactions: TransactionResponse[]; total: number }> {
+        const { transactions } = await this.transactionRepo.getByCategory(userId, "bill", offset, limit);
+        return { transactions: transactions.map((t: any) => this.mapTransactionToResponse(t)), total: transactions.length };
+    }
+
 
     /** Helpers */
     private generateReference(prefix: string): string {
