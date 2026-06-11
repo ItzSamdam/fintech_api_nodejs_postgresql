@@ -50,6 +50,26 @@ export class TransactionRepository {
         return { transactions, total };
     }
 
+    async list(offset: number, limit: number, filters: Record<string, any>): Promise<{ transactions: Transaction[]; total: number }> {
+        const where: any = {};
+        if (filters.category) where.category = filters.category;
+        if (filters.status) where.status = filters.status;
+        if (filters.from_date) where.createdAt = { [Op.gte]: filters.from_date };
+        if (filters.to_date)
+            where.createdAt = { ...(where.createdAt || {}), [Op.lte]: filters.to_date };
+
+        const total = await Transaction.count({ where });
+        const transactions = await Transaction.findAll({
+            where,
+            offset,
+            limit,
+            order: [["createdAt", "DESC"]],
+            include: [TransferDetail, BillDetail],
+        });
+
+        return { transactions, total };
+    }
+
     async getByUserID(
         userID: string,
         offset: number,
