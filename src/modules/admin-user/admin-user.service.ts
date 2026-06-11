@@ -153,6 +153,8 @@ export class AdminService {
         const { kycList, total } = await this.kycRepo.getPending(offset, limit);
         return {
             kycs: kycList.map((k: any) => ({
+                id: k.id,
+                userId: k.userId,
                 bvnVerified: k.bvnVerified,
                 ninVerified: k.ninVerified,
                 faceVerified: k.faceVerified,
@@ -161,6 +163,54 @@ export class AdminService {
             })),
             total,
         };
+    }
+
+    /** Get KYC details */
+    async getKYCDetails(kycId: string): Promise<KYCStatusResponse> {
+        const kyc = await this.kycRepo.getByID(kycId);
+        if (!kyc) throw new Error("KYC not found");
+        return {
+            id: kyc.id,
+            userId: kyc.userId,
+            bvnVerified: kyc.bvnVerified,
+            ninVerified: kyc.ninVerified,
+            faceVerified: kyc.faceVerified,
+            status: kyc.status,
+        };
+    }
+
+    /** Approve KYC */
+    async approveKYC(kycId: string, notes: string, approvedBy: string): Promise<void> {
+        const kyc = await this.kycRepo.getByID(kycId);
+        if (!kyc) throw new Error("KYC not found");
+        await this.kycRepo.approve(kycId, notes);
+        await this.auditLogRepo.create({
+            adminId: approvedBy,
+            userId: kyc.userId,
+            action: "KYC_APPROVED",
+            entityType: "user",
+            entityId: kyc.userId,
+            oldValue: { status: kyc.status },
+            newValue: { status: "approved" },
+            createdAt: new Date(),
+        });
+    }
+
+    /** Reject KYC */
+    async rejectKYC(kycId: string, reason: string, approvedBy: string): Promise<void> {
+        const kyc = await this.kycRepo.getByID(kycId);
+        if (!kyc) throw new Error("KYC not found");
+        await this.kycRepo.reject(kycId, reason);
+        await this.auditLogRepo.create({
+            adminId: approvedBy,
+            userId: kyc.userId,
+            action: "KYC_REJECTED",
+            entityType: "user",
+            entityId: kyc.userId,
+            oldValue: { status: kyc.status },
+            newValue: { status: "rejected" },
+            createdAt: new Date(),
+        });
     }
 
     /** Provider management */

@@ -42,11 +42,13 @@ export interface TierLimitResponse {
 }
 
 export interface KYCStatusResponse {
+    id: string;
+    userId: string;
     bvnVerified: boolean;
     ninVerified: boolean;
     faceVerified: boolean;
     status: string;
-    verifiedAt?: Date;
+    // verifiedAt?: Date;
 }
 
 // Session Management
