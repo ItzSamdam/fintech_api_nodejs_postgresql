@@ -23,6 +23,8 @@ export class BillPaymentService {
         private readonly redBiller: RedBillerClient
     ) { }
 
+    private readonly callbackUrl = "https://api.verifaxpay.ng/webhooks/redbiller";
+
     /** Airtime networks */
     async getAirtimeNetworks(): Promise<NetworkListResponse> {
         return {
@@ -77,13 +79,7 @@ export class BillPaymentService {
         });
 
         // Async external purchase
-        void this.processAirtimePurchase(transaction, req);
-
-        return this.mapTransactionToResponse(transaction);
-    }
-
-    private async processAirtimePurchase(transaction: any, req: any): Promise<void> {
-        const resp = await this.redBiller.purchaseTopUp({
+        void this.processAirtimePurchase(transaction, {
             product: req.network,
             phoneNo: req.phoneNumber,
             amount: req.amount,
@@ -91,12 +87,36 @@ export class BillPaymentService {
             reference: transaction.reference,
         });
 
+        return this.mapTransactionToResponse(transaction);
+    }
+
+    private async processAirtimePurchase(transaction: any, req: {
+        product: string,
+        phoneNo: string,
+        amount: string,
+        ported: boolean,
+        reference: string,
+    }): Promise<void> {
+        const resp = await this.redBiller.purchaseTopUp(
+            req.product,
+            req.phoneNo,
+            req.amount,
+            req.ported,
+            this.callbackUrl,
+            req.reference,
+        );
+
         if (!resp?.success) {
             await this.transactionRepo.markAsFailed(transaction.reference as string, resp?.message ?? "Airtime purchase failed");
             return;
         }
 
         await this.transactionRepo.updateStatus(transaction.reference as string, "success", new Date());
+    }
+
+    async getAirtimeHistory(userId: string, offset: number, limit: number): Promise<{ transactions: TransactionResponse[]; total: number }> {
+        const { transactions } = await this.transactionRepo.getByCategory(userId, "airtime", offset, limit);
+        return { transactions: transactions.map((t: any) => this.mapTransactionToResponse(t)), total: transactions.length };
     }
 
     /** Data networks */
@@ -124,6 +144,85 @@ export class BillPaymentService {
         }));
     }
 
+    async purchaseData(userId: string, req: any): Promise<TransactionResponse> {
+        const wallet = await this.walletRepo.getByUserIdForUpdate(userId);
+        if (!wallet) throw new Error("Wallet not found");
+        if (wallet.isLocked) throw new Error("Wallet is locked");
+
+        const fee = this.calculateBillFee("data", req.amount as number);
+        const vat = Math.floor(fee * 0.075);
+        const totalAmount = req.amount + fee + vat;
+
+        if (wallet.balance < totalAmount) throw new Error("Insufficient balance");
+
+        const reference = this.generateReference("DATA");
+
+        await this.walletRepo.debit(wallet.id, totalAmount as number);
+
+        const transaction = await this.transactionRepo.create({
+            reference,
+            walletId: wallet.id,
+            userId,
+            type: "debit",
+            category: "data",
+            subCategory: req.network,
+            amount: req.amount,
+            fee,
+            vat,
+            totalAmount,
+            balanceBefore: wallet.balance,
+            balanceAfter: wallet.balance - totalAmount,
+            status: "processing",
+            description: `Data purchase for ${req.phoneNumber}`,
+            createdAt: new Date(),
+        });
+
+        await this.billDetailRepo.create({
+            transactionId: transaction.id,
+            billType: "data",
+            phoneNumber: req.phoneNumber,
+            providerName: req.network,
+        });
+
+        // Async external purchase
+        void this.processDataPurchase(transaction, {
+            product: req.network,
+            phoneNo: req.phoneNumber,
+            code: req.code,
+            ported: false,
+            reference: transaction.reference,
+        });
+
+        return this.mapTransactionToResponse(transaction);
+    }
+
+    private async processDataPurchase(transaction: any, req: {
+        product: string,
+        phoneNo: string,
+        code: string,
+        ported: boolean,
+        reference: string,
+    }): Promise<void> {
+        const resp = await this.redBiller.purchaseData(
+            req.product,
+            req.phoneNo,
+            req.code,
+            req.ported,
+            this.callbackUrl,
+            req.reference
+        );
+        if (!resp?.success) {
+            await this.transactionRepo.markAsFailed(transaction.reference as string, resp?.message ?? "Data purchase failed");
+            return;
+        }
+        await this.transactionRepo.updateStatus(transaction.reference as string, "success", new Date());
+    }
+
+    async getDataHistory(userId: string, offset: number, limit: number): Promise<{ transactions: TransactionResponse[]; total: number }> {
+        const { transactions } = await this.transactionRepo.getByCategory(userId, "data", offset, limit);
+        return { transactions: transactions.map((t: any) => this.mapTransactionToResponse(t)), total: transactions.length };
+    }
+
     /** Electricity providers */
     async getElectricityProviders(): Promise<ProviderResponse[]> {
         const providers = await this.providerRepo.getActiveByType("electricity");
@@ -148,6 +247,104 @@ export class BillPaymentService {
             providerId: req.providerId,
             providerName: resp.data.provider_name ?? "",
         };
+    }
+
+    async payElectricity(userId: string, req: any): Promise<TransactionResponse> {
+        const wallet = await this.walletRepo.getByUserIdForUpdate(userId);
+        if (!wallet) throw new Error("Wallet not found");
+        if (wallet.isLocked) throw new Error("Wallet is locked");
+
+        const fee = this.calculateBillFee("electricity", req.amount as number);
+        const vat = Math.floor(fee * 0.075);
+        const totalAmount = req.amount + fee + vat;
+
+        if (wallet.balance < totalAmount) throw new Error("Insufficient balance");
+
+        const reference = this.generateReference("ELEC");
+
+        await this.walletRepo.debit(wallet.id, totalAmount as number);
+
+        const transaction = await this.transactionRepo.create({
+            reference,
+            walletId: wallet.id,
+            userId,
+            type: "debit",
+            category: "electricity",
+            subCategory: req.providerId,
+            amount: req.amount,
+            fee,
+            vat,
+            totalAmount,
+            balanceBefore: wallet.balance,
+            balanceAfter: wallet.balance - totalAmount,
+            status: "processing",
+            description: `Electricity payment for ${req.meterNumber}`,
+            createdAt: new Date(),
+        });
+
+        await this.billDetailRepo.create({
+            transactionId: transaction.id,
+            billType: "electricity",
+            meterNumber: req.meterNumber,
+            meterType: req.meterType,
+            providerName: req.providerId,
+        });
+
+        // Async external payment
+        void this.processElectricityPayment(transaction, {
+            product: req.providerId,
+            meterNo: req.meterNumber,
+            customerName: req.customerName,
+            meterType: req.meterType,
+            phoneNo: req.phoneNumber,
+            amount: req.amount,
+            reference: req.reference,
+        });
+
+        return this.mapTransactionToResponse(transaction);
+    }
+
+    private async processElectricityPayment(transaction: any, req: {
+        product: string,
+        meterNo: string,
+        customerName: string,
+        meterType: string,
+        phoneNo: string,
+        amount: string,
+        reference: string,
+    }): Promise<void> {
+        const resp = await this.redBiller.purchaseDisco(
+            req.product,
+            req.meterNo,
+            req.customerName,
+            req.meterType,
+            req.phoneNo,
+            req.amount,
+            this.callbackUrl,
+            req.reference
+        );
+        if (!resp?.success) {
+            await this.transactionRepo.markAsFailed(transaction.reference as string, resp?.message ?? "Electricity payment failed");
+            return;
+        }
+        await this.transactionRepo.updateStatus(transaction.reference as string, "success", new Date());
+    }
+
+    async getElectricityToken(req: any): Promise<any> {
+        const transaction = await this.transactionRepo.getByReference(req.reference as string);
+        if (!transaction) throw new Error("Transaction not found");
+        const billDetail = await this.billDetailRepo.getByTransactionID(transaction.id);
+        if (!billDetail) throw new Error("Bill detail not found");
+
+        return {
+            token: billDetail.electricityToken,
+            units: billDetail.electricityUnits,
+        };
+    }
+
+    async getElectricityHistory(userId: string, offset: number, limit: number): Promise<{ transactions: TransactionResponse[]; total: number }> {
+        const { transactions } = await this.transactionRepo.getByCategory(userId, "electricity", offset, limit);
+        return { transactions: transactions.map((t: any) => this.mapTransactionToResponse(t)), total: transactions.length };
     }
 
     /** Betting providers */

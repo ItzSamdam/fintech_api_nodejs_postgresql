@@ -9,11 +9,12 @@ export interface RedBillerResponse {
 export class RedBillerClient {
     private readonly http: AxiosInstance;
 
-    constructor(private readonly baseURL: string, private readonly privateKey: string) {
+    constructor(private readonly baseURL: string,
+        private readonly privateKey: string) {
         this.http = axios.create({
-            baseURL,
+            baseURL: this.baseURL,  // Explicitly use the class property
             timeout: 30000,
-            headers: { "Private-Key": privateKey, "Content-Type": "application/json" },
+            headers: { "Private-Key": this.privateKey, "Content-Type": "application/json" },
         });
     }
 
@@ -42,8 +43,22 @@ export class RedBillerClient {
     }
 
     // Transfers
-    async sendMoney(req: any): Promise<RedBillerResponse> {
-        return await this.doRequest("POST", "/2.0/payout/bank-transfer/create", req);
+    async sendMoney(
+        accountNo: string,
+        bankCode: string,
+        amount: string,
+        narration: string,
+        callbackUrl: string,
+        reference: string
+    ): Promise<RedBillerResponse> {
+        return await this.doRequest("POST", "/2.0/payout/bank-transfer/create", {
+            account_no: accountNo,
+            bank_code: bankCode,
+            amount,
+            narration,
+            callback_url: callbackUrl,
+            reference,
+        });
     }
 
     async retrySendMoney(reference: string): Promise<RedBillerResponse> {
@@ -59,25 +74,77 @@ export class RedBillerClient {
         return await this.doRequest("POST", "/1.0/payout/bank-transfer/banks/suggest", { account_no: accountNo });
     }
 
-    async verifyAccountDetails(accountNo: string, bankCode: string): Promise<RedBillerResponse> {
-        return await this.doRequest("POST", "/1.0/kyc/bank-account/verify", { account_no: accountNo, bank_code: bankCode });
+    async verifyAccountDetails(
+        accountNo: string,
+        bankCode: string
+    ): Promise<RedBillerResponse> {
+        return await this.doRequest("POST", "/1.0/kyc/bank-account/verify", {
+            account_no: accountNo,
+            bank_code: bankCode
+        });
     }
 
-    async createVirtualAccount(req: any): Promise<RedBillerResponse> {
-        return await this.doRequest("POST", "/1.0/collections/PSA/create", req);
+    async createVirtualAccount(
+        bank: string,
+        firstName: string,
+        surname: string,
+        phoneNo: string,
+        email: string,
+        bvn: string,
+        dateOfBirth: string,
+        autoSettlement: boolean,
+        callbackUrl: string,
+        reference: string,
+    ): Promise<RedBillerResponse> {
+        return await this.doRequest("POST", "/1.0/collections/PSA/create", {
+            bank,
+            first_name: firstName,
+            surname,
+            phone_no: phoneNo,
+            email,
+            bvn,
+            date_of_birth: dateOfBirth,
+            auto_settlement: autoSettlement,
+            callback_url: callbackUrl,
+            reference,
+        });
     }
 
-    async verifyVirtualAccountPayment(reference: string): Promise<RedBillerResponse> {
+    async verifyVirtualAccountPayment(
+        reference: string
+    ): Promise<RedBillerResponse> {
         return await this.doRequest("POST", "/1.0/collections/PSA/payments/verify", { reference });
     }
 
     // Bills (Disco, Cable, Airtime, Data, Betting)
-    async verifyDisco(product: string, meterNo: string, meterType: string): Promise<RedBillerResponse> {
+    async verifyDisco(
+        product: string,
+        meterNo: string,
+        meterType: string
+    ): Promise<RedBillerResponse> {
         return await this.doRequest("POST", "/1.0/bills/disco/meter/verify", { product, meter_no: meterNo, meter_type: meterType });
     }
 
-    async purchaseDisco(req: any): Promise<RedBillerResponse> {
-        return await this.doRequest("POST", "/1.1/bills/disco/purchase/create", req);
+    async purchaseDisco(
+        product: string,
+        meterNo: string,
+        customerName: string,
+        meterType: string,
+        phoneNo: string,
+        amount: string,
+        callbackUrl: string,
+        reference: string,
+    ): Promise<RedBillerResponse> {
+        return await this.doRequest("POST", "/1.1/bills/disco/purchase/create", {
+            product,
+            meter_no: meterNo,
+            customer_name: customerName,
+            meter_type: meterType,
+            phone_no: phoneNo,
+            amount,
+            callback_url: callbackUrl,
+            reference,
+        });
     }
 
     async getCablePlans(product: string): Promise<RedBillerResponse> {
@@ -88,20 +155,64 @@ export class RedBillerClient {
         return await this.doRequest("POST", "/1.0/bills/cable/decoder/verify", { product, smart_card_no: smartCardNo });
     }
 
-    async purchaseCable(req: any): Promise<RedBillerResponse> {
-        return await this.doRequest("POST", "/1.1/bills/cable/plans/purchase/create", req);
+    async purchaseCable(
+        product: string,
+        smartCardNo: string,
+        customerName: string,
+        phoneNo: string,
+        code: string,
+        callbackUrl: string,
+        reference: string,
+    ): Promise<RedBillerResponse> {
+        return await this.doRequest("POST", "/1.1/bills/cable/plans/purchase/create", {
+            product,
+            code,
+            smart_card_no: smartCardNo,
+            customer_name: customerName,
+            phone_no: phoneNo,
+            callback_url: callbackUrl,
+            reference,
+        });
     }
 
-    async purchaseTopUp(req: any): Promise<RedBillerResponse> {
-        return await this.doRequest("POST", "/1.0/bills/airtime/purchase/create", req);
+    async purchaseTopUp(
+        product: string,
+        phoneNo: string,
+        amount: string,
+        ported: boolean,
+        callbackUrl: string,
+        reference: string,
+    ): Promise<RedBillerResponse> {
+        return await this.doRequest("POST", "/1.0/bills/airtime/purchase/create", {
+            product,
+            phone_no: phoneNo,
+            amount,
+            ported,
+            callback_url: callbackUrl,
+            reference,
+        });
     }
 
     async getDataPlans(product: string): Promise<RedBillerResponse> {
         return await this.doRequest("POST", "/1.0/bills/data/plans/list", { product });
     }
 
-    async purchaseData(req: any): Promise<RedBillerResponse> {
-        return await this.doRequest("POST", "/1.0/bills/data/plans/purchase/create", req);
+    async purchaseData(
+        product: string,
+        phoneNo: string,
+        code: string,
+        ported: boolean,
+        callbackUrl: string,
+        reference: string,
+    ): Promise<RedBillerResponse> {
+        return await this.doRequest("POST", "/1.0/bills/data/plans/purchase/create", {
+            product,
+            phone_no: phoneNo,
+            code,
+            ported,
+            callback_url: callbackUrl,
+            reference,
+        });
     }
 
     // Betting
@@ -109,8 +220,22 @@ export class RedBillerClient {
         return await this.doRequest("GET", "/1.5/bills/betting/providers/list");
     }
 
-    async creditBetWallet(req: any): Promise<RedBillerResponse> {
-        return await this.doRequest("POST", "/1.5/bills/betting/account/payment/create", req);
+    async creditBetWallet(
+        product: string,
+        customerId: string,
+        amount: string,
+        phoneNo: string,
+        callbackUrl: string,
+        reference: string,
+    ): Promise<RedBillerResponse> {
+        return await this.doRequest("POST", "/1.5/bills/betting/account/payment/create", {
+            product,
+            customer_id: customerId,
+            amount,
+            phone_no: phoneNo,
+            callback_url: callbackUrl,
+            reference,
+        });
     }
 
     async verifyBetWallet(product: string, customerId: string): Promise<RedBillerResponse> {

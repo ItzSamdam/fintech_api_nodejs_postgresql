@@ -14,6 +14,7 @@ import {
 import User from '@/shared/database/models/user.model';
 import Wallet from '@/shared/database/models/wallet.model';
 import TransferDetail from '@/shared/database/models/transfer-detail.model';
+import BillDetail from './bill-detail.model';
 
 @Table({
   tableName: 'transactions',
@@ -206,4 +207,7 @@ export default class Transaction extends Model {
 
   @HasOne(() => TransferDetail, 'transactionId')
   transferDetail!: TransferDetail | null;
+
+  @HasOne(() => BillDetail, 'transactionId')
+  billDetail!: BillDetail | null;
 }
