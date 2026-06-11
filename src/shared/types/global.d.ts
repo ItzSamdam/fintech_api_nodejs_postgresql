@@ -1,10 +1,8 @@
 export interface UserPayload {
-    id: string;
+    userId: string;
     email: string;
-    type: 'user';
-    expired_at: Date;
-    role: 'vendor' | 'buyer';
-    provider: AuthProvider;
+    type: "user";
+    expiredAt: Date;
 }
 
 export interface PaginatedResult<T> {
@@ -26,7 +24,7 @@ export interface AdminPayload {
     id: string;
     email: string;
     type: 'admin';
-    role: string;
+    expiredAt: Date;
 }
 
 export interface GoogleProfile {
@@ -52,6 +50,8 @@ declare global {
         interface Request {
             user?: UserPayload;
             admin?: AdminPayload;
+            token?: string;
+            session?: Session;
         }
     }
 }

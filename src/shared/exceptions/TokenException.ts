@@ -5,8 +5,8 @@ import { errorResponse } from "@/shared/utils";
 export class TokenException extends CustomException {
   statusCode = StatusCodes.UNAUTHORIZED;
 
-  constructor() {
-    super('Oops! Invalid or Expired Token!');
+  constructor(message: string | null = null) {
+    super(message ?? 'Oops! Invalid or Expired Token!');
 
     Object.setPrototypeOf(this, TokenException.prototype);
   }

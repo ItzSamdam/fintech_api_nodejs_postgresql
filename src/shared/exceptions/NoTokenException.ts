@@ -5,8 +5,8 @@ import { errorResponse } from "@/shared/utils";
 export class NoTokenException extends CustomException {
   statusCode = StatusCodes.UNAUTHORIZED;
 
-  constructor() {
-    super('Authentication Required');
+  constructor(message: string | null = null) {
+    super(message ?? 'Authentication Required');
 
     Object.setPrototypeOf(this, NoTokenException.prototype);
   }
