@@ -171,6 +171,13 @@ export class TransferService {
         };
     }
 
+    async getTransferByReference(userId: string, reference: string): Promise<TransactionResponse | null> {
+        const tx = await this.transactionRepo.getByReference(reference);
+        if (!tx) return null;
+        if (tx.userId !== userId) throw new Error("Unauthorized");
+        return this.mapTransactionToResponse(tx);
+    }
+
     /** Helpers */
     private generateReference(prefix: string): string {
         return `${prefix}${Date.now()}`;
