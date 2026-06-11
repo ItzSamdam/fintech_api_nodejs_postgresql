@@ -62,7 +62,7 @@ export class AuditLogRepository {
     filters: Record<string, any>
   ): Promise<{ logs: AuditLog[]; total: number }> {
     const where: any = {};
-    if (filters.admin_id) where.adminId = filters.admin_id;
+    if (filters.adminId) where.adminId = filters.adminId;
     if (filters.action) where.action = filters.action;
     if (filters.from_date) where.createdAt = { [Op.gte]: filters.from_date };
     if (filters.to_date)

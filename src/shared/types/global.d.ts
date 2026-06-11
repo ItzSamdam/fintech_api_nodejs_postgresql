@@ -2,6 +2,7 @@ export interface UserPayload {
     userId: string;
     email: string;
     type: "user";
+    tier: number;
     expiredAt: Date;
 }
 
@@ -54,6 +55,8 @@ declare global {
             admin?: AdminPayload;
             token?: string;
             session?: Session;
+            tierLimit?: TierLimit;
+            wallet?: Wallet;
         }
     }
 }
