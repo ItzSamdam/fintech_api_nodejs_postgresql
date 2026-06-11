@@ -25,6 +25,8 @@ export interface AdminPayload {
     email: string;
     type: 'admin';
     expiredAt: Date;
+    role: string;
+    permissions?: string[];
 }
 
 export interface GoogleProfile {

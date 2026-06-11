@@ -1,4 +1,4 @@
-import { type Request } from "express";
+import { type NextFunction, type Request } from "express";
 import { type UserPayload, type AdminPayload } from "@/shared/types/global";
 import { TokenException } from "@/shared/exceptions";
 
@@ -32,4 +32,25 @@ export const getAdminIdFromRequest = (req: Request): string => {
         throw new TokenException("Admin ID not found in request context");
     }
     return req.admin.id;
+};
+
+
+export const adminOnly = (req: Request, res: Response, next: NextFunction): void => {
+    if (!req.admin) {
+        next(new TokenException("Admin authentication required"));
+        return;
+    }
+    next();
+};
+
+export const superAdminOnly = (req: Request, res: Response, next: NextFunction): void => {
+    if (!req.admin) {
+        next(new TokenException("Admin authentication required"));
+        return;
+    }
+    if (req.admin.role !== "super_admin") {
+        next(new TokenException("Super admin access required"));
+        return;
+    }
+    next();
 };
