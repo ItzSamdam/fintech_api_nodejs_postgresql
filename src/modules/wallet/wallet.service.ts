@@ -1,8 +1,8 @@
-import { type WalletRepository } from "@/modules/_business/repositories/wallet.repository";
-import { type TransactionRepository } from "@/modules/_business/repositories/transaction.repository";
-import { type UserRepository } from "@/modules/_business/repositories/user.repository";
-import { type TierLimits, type TransactionResponse, type BalanceResponse, type TransactionHistoryResponse, type WalletResponse } from "@/modules/_business/interfaces/response/wallet";
-import { type TierLimitResponse } from "@/modules/_business/interfaces/response/auth";
+import { type WalletRepository } from "@/modules/_common/repositories/wallet.repository";
+import { type TransactionRepository } from "@/modules/_common/repositories/transaction.repository";
+import { type UserRepository } from "@/modules/_common/repositories/user.repository";
+import { type TierLimits, type TransactionResponse, type BalanceResponse, type TransactionHistoryResponse, type WalletResponse } from "@/modules/_common/interfaces/response/wallet";
+import { type TierLimitResponse } from "@/modules/_common/interfaces/response/auth";
 
 export class WalletService {
   constructor(

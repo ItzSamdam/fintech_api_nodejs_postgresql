@@ -1,4 +1,4 @@
-import CustomException from "@/shared/exceptions/CustomException";
+import CustomException from "@/shared/exceptions/custom-exception";
 import { StatusCodes } from "http-status-codes";
 import { errorResponse } from "@/shared/utils";
 

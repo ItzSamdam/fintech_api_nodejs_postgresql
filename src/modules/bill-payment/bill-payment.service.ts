@@ -1,17 +1,17 @@
-import { type WalletRepository } from "@/modules/_business/repositories/wallet.repository";
-import { type TransactionRepository } from "@/modules/_business/repositories/transaction.repository";
-import { type BillDetailRepository } from "@/modules/_business/repositories/bill-detail.repository";
-import { type ProviderRepository } from "@/modules/_business/repositories/provider.repository";
-import { type UserRepository } from "@/modules/_business/repositories/user.repository";
-import { type RedBillerClient } from "@/modules/_business/registry/redbiller.client.registry";
+import { type WalletRepository } from "@/modules/_common/repositories/wallet.repository";
+import { type TransactionRepository } from "@/modules/_common/repositories/transaction.repository";
+import { type BillDetailRepository } from "@/modules/_common/repositories/bill-detail.repository";
+import { type ProviderRepository } from "@/modules/_common/repositories/provider.repository";
+import { type UserRepository } from "@/modules/_common/repositories/user.repository";
+import { type RedBillerClient } from "@/modules/_common/registry/redbiller.client.registry";
 import {
     type NetworkListResponse,
     type DataPlanResponse,
     type ProviderResponse,
     type MeterValidationResponse,
     type BettingAccountResponse,
-} from "@/modules/_business/interfaces/response/bill";
-import { type TransactionResponse } from "@/modules/_business/interfaces/response/wallet";
+} from "@/modules/_common/interfaces/response/bill";
+import { type TransactionResponse } from "@/modules/_common/interfaces/response/wallet";
 
 export class BillPaymentService {
     constructor(

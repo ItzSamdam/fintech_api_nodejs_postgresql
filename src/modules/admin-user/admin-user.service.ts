@@ -1,15 +1,15 @@
-import { type UserRepository } from "@/modules/_business/repositories/user.repository";
-import { type WalletRepository } from "@/modules/_business/repositories/wallet.repository";
-import { type TransactionRepository } from "@/modules/_business/repositories/transaction.repository";
-import { type KYCRepository } from "@/modules/_business/repositories/kyc.repository";
-import { type ProviderRepository } from "@/modules/_business/repositories/provider.repository";
-import { type AuditLogRepository } from "@/modules/_business/repositories/audit-log.repository";
+import { type UserRepository } from "@/modules/_common/repositories/user.repository";
+import { type WalletRepository } from "@/modules/_common/repositories/wallet.repository";
+import { type TransactionRepository } from "@/modules/_common/repositories/transaction.repository";
+import { type KYCRepository } from "@/modules/_common/repositories/kyc.repository";
+import { type ProviderRepository } from "@/modules/_common/repositories/provider.repository";
+import { type AuditLogRepository } from "@/modules/_common/repositories/audit-log.repository";
 // import { type AdminUserRepository } from "@/modules/_business/repositories/admin-user.repository";
 // import { type RoleRepository } from "@/modules/_business/repositories/role.repository";
-import { type UserListResponse, type KYCStatusResponse } from "@/modules/_business/interfaces/response/auth";
-import { type TransactionResponse, type WalletResponse } from "@/modules/_business/interfaces/response/wallet";
-import { type ProviderListResponse } from "@/modules/_business/interfaces/response/bill";
-import { type AuditLogResponse, type RevenueReportResponse, type SystemSettings } from "@/modules/_business/interfaces/response/common";
+import { type UserListResponse, type KYCStatusResponse } from "@/modules/_common/interfaces/response/auth";
+import { type TransactionResponse, type WalletResponse } from "@/modules/_common/interfaces/response/wallet";
+import { type ProviderListResponse } from "@/modules/_common/interfaces/response/bill";
+import { type AuditLogResponse, type RevenueReportResponse, type SystemSettings } from "@/modules/_common/interfaces/response/common";
 
 export class AdminService {
     constructor(

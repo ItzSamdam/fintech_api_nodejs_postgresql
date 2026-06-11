@@ -1,15 +1,15 @@
-import { type WalletRepository } from "@/modules/_business/repositories/wallet.repository";
-import { type TransactionRepository } from "@/modules/_business/repositories/transaction.repository";
-import { type SavingsGoalRepository } from "@/modules/_business/repositories/saving-goal.repository";
-import { type SavingContributionRepository } from "@/modules/_business/repositories/saving-contribution.repository";
-import { type AutoRoundupRepository } from "@/modules/_business/repositories/auto-roundup.repository";
-import { type UserRepository } from "@/modules/_business/repositories/user.repository";
-import { type CacheRepository } from "@/modules/_business/redis/cache.repository";
+import { type WalletRepository } from "@/modules/_common/repositories/wallet.repository";
+import { type TransactionRepository } from "@/modules/_common/repositories/transaction.repository";
+import { type SavingsGoalRepository } from "@/modules/_common/repositories/saving-goal.repository";
+import { type SavingContributionRepository } from "@/modules/_common/repositories/saving-contribution.repository";
+import { type AutoRoundupRepository } from "@/modules/_common/repositories/auto-roundup.repository";
+import { type UserRepository } from "@/modules/_common/repositories/user.repository";
+import { type CacheRepository } from "@/modules/_common/redis/cache.repository";
 import {
     type SavingsGoalResponse,
     type SavingsContributionResponse,
     type RoundupStatusResponse,
-} from "@/modules/_business/interfaces/response/savings";
+} from "@/modules/_common/interfaces/response/savings";
 
 export class SavingsService {
     constructor(
