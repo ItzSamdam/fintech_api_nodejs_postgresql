@@ -1,7 +1,8 @@
 import { Sequelize } from "sequelize-typescript";
-import path from "path";
 import { config } from "@/shared/config/dev";
 import { logger } from "@/shared/config/logger";
+
+import * as models from "./models";
 
 // Initialize Sequelize
 const sequelize = new Sequelize({
@@ -30,7 +31,7 @@ const sequelize = new Sequelize({
       }
       : undefined,
   },
-  models: [path.join(__dirname, "models")], // or auto-load from models directory
+  models: Object.values(models), // to automatically load models from the models directory
 });
 
 // Bootstrap function

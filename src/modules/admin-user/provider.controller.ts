@@ -24,7 +24,7 @@ export class ProviderAdminController {
             const providerId = req.params.id;
             const { isActive } = req.body;
 
-            await this.adminService.toggleProvider(providerId, isActive);
+            await this.adminService.toggleProvider(providerId, isActive as boolean);
 
             const status = isActive ? "enabled" : "disabled";
             res.json({ success: true, message: `Provider ${status} successfully` });
@@ -39,7 +39,7 @@ export class ProviderAdminController {
             const providerId = req.params.id;
             const { priority } = req.body;
 
-            await this.adminService.setProviderPriority(providerId, priority);
+            await this.adminService.setProviderPriority(providerId, priority as number);
 
             res.json({ success: true, message: "Provider priority updated successfully" });
         } catch (err) {
