@@ -1,12 +1,12 @@
 import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcrypt";
 import jwt, { type SignOptions } from "jsonwebtoken";
-import { type SMSService } from "@/modules/_business/registry/termii.client.registry";
-import { type UserRepository } from "@/modules/_business/repositories/user.repository";
-import { type KYCRepository } from "@/modules/_business/repositories/kyc.repository";
-import { type SessionRepository } from "@/modules/_business/repositories/session.repository";
-import { type OTPRepository } from "@/modules/_business/repositories/otp.repository";
-import { type WalletRepository } from "@/modules/_business/repositories/wallet.repository";
+import { type SMSService } from "@/modules/_common/registry/termii.client.registry";
+import { type UserRepository } from "@/modules/_common/repositories/user.repository";
+import { type KYCRepository } from "@/modules/_common/repositories/kyc.repository";
+import { type SessionRepository } from "@/modules/_common/repositories/session.repository";
+import { type OTPRepository } from "@/modules/_common/repositories/otp.repository";
+import { type WalletRepository } from "@/modules/_common/repositories/wallet.repository";
 import { config } from "@/shared/config/dev";
 
 export class AuthService {
@@ -84,7 +84,7 @@ export class AuthService {
     }
 
     // TODO: Implement email registration and verification flow, kyc verification flow (NIN, BVN, Face/Document verification)
-    
+
 
     async login(phoneNumber: string, password: string, deviceId: string): Promise<any> {
         const user = await this.userRepo.getByPhoneNumber(phoneNumber);
@@ -108,6 +108,25 @@ export class AuthService {
             tokenType: "Bearer",
             user,
         };
+    }
+
+    async getUserProfile(userId: string): Promise<any> {
+        const user = await this.userRepo.getById(userId);
+        if (!user) throw new Error("User not found");
+
+        return user;
+    }
+
+    async updateUserProfile(userId: string, data: any): Promise<void> {
+        const user = await this.userRepo.getById(userId);
+        if (!user) throw new Error("User not found");
+
+        user.firstName = data.firstName;
+        user.lastName = data.lastName;
+        user.email = data.email;
+        user.phoneNumber = data.phoneNumber;
+        user.gender = data.gender;
+        await this.userRepo.update(user);
     }
 
     async changePassword(userId: string, oldPassword: string, newPassword: string): Promise<void> {
@@ -187,11 +206,10 @@ export class AuthService {
         const expiry = tokenType === "access" ? config.jwt.expiresIn : config.jwt.refreshTokenExpiresIn;
 
         const payload = {
-            user_id: user.id,
+            userId: user.id,
             phone: user.phoneNumber,
             email: user.email,
-            tier: user.tier,
-            token_type: tokenType,
+            tier: user.tier
         };
 
         const options: SignOptions = {

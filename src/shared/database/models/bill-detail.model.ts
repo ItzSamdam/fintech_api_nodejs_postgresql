@@ -5,7 +5,6 @@ import {
   DataType,
   CreatedAt,
   Unique,
-  Index,
   ForeignKey,
   BelongsTo,
 } from 'sequelize-typescript';
@@ -17,6 +16,16 @@ import Provider from '@/shared/database/models/provider.model';
   timestamps: false,         // only createdAt
   underscored: true,
   modelName: 'BillDetail',
+  indexes: [
+    {
+      name: 'bill_details_bill_type_idx',
+      fields: ['bill_type']  // Use database column name here
+    },
+    {
+      name: 'bill_details_provider_id_idx',
+      fields: ['provider_id']  // Use database column name here
+    }
+  ]
 })
 export default class BillDetail extends Model {
   @Column({
@@ -35,14 +44,14 @@ export default class BillDetail extends Model {
   })
   transactionId!: string;
 
-  @Index
+
   @Column({
     type: DataType.STRING(50),
     allowNull: false,
   })
   billType!: string;          // airtime, data, electricity, betting
 
-  @Index
+  
   @ForeignKey(() => Provider)
   @Column({
     type: DataType.UUID,

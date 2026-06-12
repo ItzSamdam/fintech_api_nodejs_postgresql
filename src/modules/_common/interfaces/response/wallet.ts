@@ -39,7 +39,7 @@ export interface TransactionResponse {
     description: string;
     balanceBefore: number;
     balanceAfter: number;
-    completedAt?: Date;
+    completedAt?: Date | null;
     createdAt: Date;
 
     transferDetail?: TransferDetailResponse;
@@ -71,4 +71,19 @@ export interface TransactionHistoryResponse {
     page: number;
     limit: number;
     totalPages: number;
+}
+
+export interface WalletHistoryResponse {
+    wallets: WalletResponse[];
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+}
+
+export interface DashboardStatsResponse {
+    totalBalance: number;
+    totalBalanceNaira: number;
+    activeUsers: number;
+    totalUsers: number;
 }

@@ -17,6 +17,16 @@ import {
   underscored: true,      // maps camelCase properties to snake_case columns
   paranoid: true,         // enables soft delete (uses deletedAt)
   modelName: 'User',
+  indexes: [
+    {
+      name: 'users_device_id_idx',
+      fields: ['device_id']  // Use database column name here
+    },
+    {
+      name: 'users_push_device_id_idx',
+      fields: ['push_device_id']  // Use database column name here
+    }
+  ]
 })
 export default class User extends Model {
   @PrimaryKey
@@ -124,14 +134,13 @@ export default class User extends Model {
   })
   passwordHash!: string;
 
-  @Index
   @Column({
     type: DataType.STRING,
     allowNull: true,
+    // field: "device_id"
   })
   deviceId!: string;
 
-  @Index
   @Column({
     type: DataType.STRING,
     allowNull: true,

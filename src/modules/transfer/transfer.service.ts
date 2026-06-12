@@ -1,10 +1,10 @@
-import { type WalletRepository } from "@/modules/_business/repositories/wallet.repository";
-import { type TransactionRepository } from "@/modules/_business/repositories/transaction.repository";
-import { type TransferDetailRepository } from "@/modules/_business/repositories/transfer-detail.repository";
-import { type UserRepository } from "@/modules/_business/repositories/user.repository";
-import { type RedBillerClient } from "@/modules/_business/registry/redbiller.client.registry";
-import { type CacheRepository } from "@/modules/_business/redis/cache.repository";
-import { type TransactionResponse, type TransactionHistoryResponse } from "@/modules/_business/interfaces/response/wallet";
+import { type WalletRepository } from "@/modules/_common/repositories/wallet.repository";
+import { type TransactionRepository } from "@/modules/_common/repositories/transaction.repository";
+import { type TransferDetailRepository } from "@/modules/_common/repositories/transfer-detail.repository";
+import { type UserRepository } from "@/modules/_common/repositories/user.repository";
+import { type RedBillerClient } from "@/modules/_common/registry/redbiller.client.registry";
+import { type CacheRepository } from "@/modules/_common/redis/cache.repository";
+import { type TransactionResponse, type TransactionHistoryResponse } from "@/modules/_common/interfaces/response/wallet";
 
 export class TransferService {
     constructor(
@@ -169,6 +169,13 @@ export class TransferService {
             limit,
             totalPages,
         };
+    }
+
+    async getTransferByReference(userId: string, reference: string): Promise<TransactionResponse | null> {
+        const tx = await this.transactionRepo.getByReference(reference);
+        if (!tx) return null;
+        if (tx.userId !== userId) throw new Error("Unauthorized");
+        return this.mapTransactionToResponse(tx);
     }
 
     /** Helpers */

@@ -40,6 +40,10 @@ export class UserRepository {
         return await User.findOne({ where: { nin } });
     }
 
+    async getUserCount(): Promise<number> {
+        return await User.count();
+    }
+
     async list(
         offset: number,
         limit: number,

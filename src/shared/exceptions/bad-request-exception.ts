@@ -1,17 +1,17 @@
-import CustomException from "@/shared/exceptions/CustomException";
+import CustomException from "@/shared/exceptions/custom-exception";
 import { StatusCodes } from "http-status-codes";
 import { errorResponse } from "@/shared/utils";
 
 /**
  * Represents an exception that occurs when a bad request is made.
  */
-export class ConflictException extends CustomException {
-  public statusCode = StatusCodes.CONFLICT;
+export class BadRequestException extends CustomException {
+  public statusCode = StatusCodes.BAD_REQUEST;
 
   constructor(message: string) {
     super(message);
 
-    Object.setPrototypeOf(this, ConflictException.prototype);
+    Object.setPrototypeOf(this, BadRequestException.prototype);
   }
 
   /**
@@ -24,4 +24,4 @@ export class ConflictException extends CustomException {
   }
 }
 
-// export default ConflictException;
+// export default BadRequestException;

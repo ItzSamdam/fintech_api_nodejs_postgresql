@@ -1,7 +1,8 @@
 import { Sequelize } from "sequelize-typescript";
-import path from "path";
 import { config } from "@/shared/config/dev";
 import { logger } from "@/shared/config/logger";
+
+import * as models from "./models";
 
 // Initialize Sequelize
 const sequelize = new Sequelize({
@@ -30,7 +31,7 @@ const sequelize = new Sequelize({
       }
       : undefined,
   },
-  models: [path.join(__dirname, "models")], // or auto-load from models directory
+  models: Object.values(models), // to automatically load models from the models directory
 });
 
 // Bootstrap function
@@ -41,7 +42,7 @@ export async function initDatabase(): Promise<void> {
 
     // In production, rely on migrations instead of sync
     if (config.serverEnv !== "production") {
-      await sequelize.sync({ force: false });
+      await sequelize.sync({ force: true });
       logger.info("✅ Database synced (dev mode).");
     }
   } catch (err) {

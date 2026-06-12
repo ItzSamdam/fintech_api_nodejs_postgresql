@@ -4,7 +4,6 @@ import {
   Column,
   DataType,
   CreatedAt,
-  Index,
   ForeignKey,
   BelongsTo,
 } from 'sequelize-typescript';
@@ -15,6 +14,12 @@ import SupportTicket from '@/shared/database/models/support-ticket.model';
   timestamps: false,
   underscored: true,
   modelName: 'TicketMessage',
+  indexes: [
+    {
+      name: 'ticket_messages_ticket_id_idx',
+      fields: ['ticket_id']  // Use database column name here
+    }
+  ]
 })
 export default class TicketMessage extends Model {
   @Column({
@@ -25,7 +30,6 @@ export default class TicketMessage extends Model {
   })
   id!: string;
 
-  @Index
   @ForeignKey(() => SupportTicket)
   @Column({
     type: DataType.UUID,

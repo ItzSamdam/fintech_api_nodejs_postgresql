@@ -16,6 +16,20 @@ import User from '@/shared/database/models/user.model';
   timestamps: false,
   underscored: true,
   modelName: 'AuditLog',
+  indexes: [
+    {
+      name: 'audit_logs_user_id_idx',
+      fields: ['user_id']  // Use database column name here
+    },
+    {
+      name: 'audit_logs_admin_id_idx',
+      fields: ['admin_id']  // Use database column name here
+    },
+    {
+      name: 'audit_logs_created_at_idx',
+      fields: ['created_at']  // Use database column name here
+    }
+  ]
 })
 export default class AuditLog extends Model {
   @Column({
@@ -26,7 +40,7 @@ export default class AuditLog extends Model {
   })
   id!: string;
 
-  @Index
+  
   @ForeignKey(() => AdminUser)
   @Column({
     type: DataType.UUID,
@@ -34,7 +48,7 @@ export default class AuditLog extends Model {
   })
   adminId!: string | null;
 
-  @Index
+  
   @ForeignKey(() => User)
   @Column({
     type: DataType.UUID,
@@ -92,7 +106,6 @@ export default class AuditLog extends Model {
   metadata!: object | null;
 
   @CreatedAt
-  @Index
   @Column({
     type: DataType.DATE,
     defaultValue: DataType.NOW,

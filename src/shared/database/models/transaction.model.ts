@@ -14,12 +14,23 @@ import {
 import User from '@/shared/database/models/user.model';
 import Wallet from '@/shared/database/models/wallet.model';
 import TransferDetail from '@/shared/database/models/transfer-detail.model';
+import BillDetail from './bill-detail.model';
 
 @Table({
   tableName: 'transactions',
   timestamps: false,
   underscored: true,
   modelName: 'Transaction',
+  indexes: [
+    {
+      name: 'transactions_wallet_id_idx',
+      fields: ['wallet_id']  // Use database column name here
+    },
+    {
+      name: 'transactions_user_id_idx',
+      fields: ['user_id']  // Use database column name here
+    }
+  ]
 })
 export default class Transaction extends Model {
   @Column({
@@ -37,7 +48,6 @@ export default class Transaction extends Model {
   })
   reference!: string;
 
-  @Index
   @ForeignKey(() => Wallet)
   @Column({
     type: DataType.UUID,
@@ -45,7 +55,6 @@ export default class Transaction extends Model {
   })
   walletId!: string;
 
-  @Index
   @ForeignKey(() => User)
   @Column({
     type: DataType.UUID,
@@ -206,4 +215,7 @@ export default class Transaction extends Model {
 
   @HasOne(() => TransferDetail, 'transactionId')
   transferDetail!: TransferDetail | null;
+
+  @HasOne(() => BillDetail, 'transactionId')
+  billDetail!: BillDetail | null;
 }

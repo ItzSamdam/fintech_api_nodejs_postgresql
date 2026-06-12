@@ -4,7 +4,7 @@ import {
   Column,
   DataType,
   CreatedAt,
-  Index,
+  // Index,
   Unique,
   ForeignKey,
   BelongsTo,
@@ -16,6 +16,12 @@ import User from '@/shared/database/models/user.model';
   timestamps: false,         // manual createdAt, no updatedAt
   underscored: true,
   modelName: 'Session',
+  indexes: [
+    {
+      name: 'sessions_user_id_idx',
+      fields: ['user_id']  // Use database column name here
+    }
+  ]
 })
 export default class Session extends Model {
   @Column({
@@ -26,7 +32,6 @@ export default class Session extends Model {
   })
   id!: string;
 
-  @Index
   @ForeignKey(() => User)
   @Column({
     type: DataType.UUID,

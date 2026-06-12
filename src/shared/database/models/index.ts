@@ -1,4 +1,3 @@
-// src/shared/database/models/index.ts
 export { default as AdminUser } from '@/shared/database/models/admin-users.model';
 export { default as AuditLog } from '@/shared/database/models/audit-log.model';
 export { default as AutoRoundup } from '@/shared/database/models/auto-roundup.model';

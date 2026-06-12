@@ -1,3 +1,5 @@
+import { type WalletResponse } from "@/modules/_common/interfaces/response/wallet";
+
 export interface AuthResponse {
     accessToken: string;
     refreshToken: string;
@@ -12,6 +14,22 @@ export interface UserListResponse {
     page: number;
     limit: number;
     totalPages: number;
+}
+
+export interface UserDetailResponse {
+    id: string;
+    phoneNumber: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    tier: number;
+    isActive: boolean;
+    isSuspended: boolean;
+    suspendedAt: Date | null;
+    kycStatus: string;
+    wallet: WalletResponse | null;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 export interface UserResponse {
@@ -42,11 +60,13 @@ export interface TierLimitResponse {
 }
 
 export interface KYCStatusResponse {
+    id: string;
+    userId: string;
     bvnVerified: boolean;
     ninVerified: boolean;
     faceVerified: boolean;
     status: string;
-    verifiedAt?: Date;
+    // verifiedAt?: Date;
 }
 
 // Session Management

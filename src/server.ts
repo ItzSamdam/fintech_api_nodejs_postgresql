@@ -2,7 +2,7 @@ import "tsconfig-paths/register";
 import { app } from "@/app";
 import { config, logger } from "@/shared/config";
 import { sequelize, initDatabase } from "@/shared/database";
-import { initializeCronJobs } from "@/cronJobs";
+import { initializeCronJobs } from "@/cron-jobs";
 
 async function startServer(): Promise<void> {
   try {

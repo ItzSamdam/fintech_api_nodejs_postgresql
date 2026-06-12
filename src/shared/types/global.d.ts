@@ -2,6 +2,7 @@ export interface UserPayload {
     userId: string;
     email: string;
     type: "user";
+    tier: number;
     expiredAt: Date;
 }
 
@@ -25,6 +26,8 @@ export interface AdminPayload {
     email: string;
     type: 'admin';
     expiredAt: Date;
+    role: string;
+    permissions?: string[];
 }
 
 export interface GoogleProfile {
@@ -52,6 +55,8 @@ declare global {
             admin?: AdminPayload;
             token?: string;
             session?: Session;
+            tierLimit?: TierLimit;
+            wallet?: Wallet;
         }
     }
 }

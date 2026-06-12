@@ -4,7 +4,7 @@ import {
   Column,
   DataType,
   CreatedAt,
-  Index,
+  // Index,
   ForeignKey,
   BelongsTo,
 } from 'sequelize-typescript';
@@ -15,6 +15,16 @@ import Provider from '@/shared/database/models/provider.model';
   timestamps: false,         // only createdAt
   underscored: true,
   modelName: 'ProviderLog',
+  indexes: [
+    {
+      name: 'provider_logs_provider_id_idx',
+      fields: ['provider_id']  // Use database column name here
+    },
+    {
+      name: 'provider_logs_transaction_id_idx',
+      fields: ['transaction_id']  // Use database column name here
+    }
+  ]
 })
 export default class ProviderLog extends Model {
   @Column({
@@ -25,7 +35,7 @@ export default class ProviderLog extends Model {
   })
   id!: string;
 
-  @Index
+  
   @ForeignKey(() => Provider)
   @Column({
     type: DataType.UUID,
@@ -33,7 +43,7 @@ export default class ProviderLog extends Model {
   })
   providerId!: string;
 
-  @Index
+  
   @Column({
     type: DataType.UUID,
     allowNull: true,
