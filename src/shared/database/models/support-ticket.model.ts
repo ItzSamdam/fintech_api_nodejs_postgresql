@@ -19,6 +19,16 @@ import TicketMessage from '@/shared/database/models/ticket-message.model';
   timestamps: false,
   underscored: true,
   modelName: 'SupportTicket',
+  indexes: [
+    {
+      name: 'support_tickets_user_id_idx',
+      fields: ['user_id']  // Use database column name here
+    },
+    {
+      name: 'support_tickets_transaction_id_idx',
+      fields: ['transaction_id']
+    }
+  ]
 })
 export default class SupportTicket extends Model {
   @Column({
@@ -29,7 +39,6 @@ export default class SupportTicket extends Model {
   })
   id!: string;
 
-  @Index
   @ForeignKey(() => User)
   @Column({
     type: DataType.UUID,
@@ -37,7 +46,6 @@ export default class SupportTicket extends Model {
   })
   userId!: string;
 
-  @Index
   @Column({
     type: DataType.UUID,
     allowNull: true,

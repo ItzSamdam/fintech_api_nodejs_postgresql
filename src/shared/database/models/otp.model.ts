@@ -4,7 +4,7 @@ import {
   Column,
   DataType,
   CreatedAt,
-  Index,
+  // Index,
 } from 'sequelize-typescript';
 
 @Table({
@@ -12,6 +12,12 @@ import {
   timestamps: false,         // only createdAt
   underscored: true,
   modelName: 'OTP',
+  indexes: [
+    {
+      name: 'otps_phone_number_idx',
+      fields: ['phone_number']  // Use database column name here
+    }
+  ]
 })
 export default class OTP extends Model {
   @Column({
@@ -22,7 +28,6 @@ export default class OTP extends Model {
   })
   id!: string;
 
-  @Index
   @Column({
     type: DataType.STRING,
     allowNull: false,

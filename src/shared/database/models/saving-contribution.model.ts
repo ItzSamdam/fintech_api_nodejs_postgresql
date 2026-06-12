@@ -4,7 +4,7 @@ import {
   Column,
   DataType,
   CreatedAt,
-  Index,
+  // Index,
   Unique,
   ForeignKey,
   BelongsTo,
@@ -17,6 +17,12 @@ import Transaction from '@/shared/database/models/transaction.model';
   timestamps: false,
   underscored: true,
   modelName: 'SavingsContribution',
+  indexes: [
+    {
+      name: 'savings_contributions_savings_goal_id_idx',
+      fields: ['savings_goal_id']  // Use database column name here
+    }
+  ]
 })
 export default class SavingsContribution extends Model {
   @Column({
@@ -27,7 +33,6 @@ export default class SavingsContribution extends Model {
   })
   id!: string;
 
-  @Index
   @ForeignKey(() => SavingsGoal)
   @Column({
     type: DataType.UUID,

@@ -42,7 +42,7 @@ export async function initDatabase(): Promise<void> {
 
     // In production, rely on migrations instead of sync
     if (config.serverEnv !== "production") {
-      await sequelize.sync({ force: false });
+      await sequelize.sync({ force: true });
       logger.info("✅ Database synced (dev mode).");
     }
   } catch (err) {

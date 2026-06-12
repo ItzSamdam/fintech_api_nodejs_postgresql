@@ -5,7 +5,7 @@ import {
   DataType,
   CreatedAt,
   UpdatedAt,
-  Index,
+  // Index,
   ForeignKey,
   BelongsTo,
   HasMany,
@@ -22,6 +22,12 @@ import Transaction from '@/shared/database/models/transaction.model';
   timestamps: false,
   underscored: true,
   modelName: 'SavingsGoal',
+  indexes: [
+    {
+      name: 'provider_logs_user_id_idx',
+      fields: ['user_id']  // Use database column name here
+    }
+  ]
 })
 export default class SavingsGoal extends Model {
   @Column({
@@ -32,7 +38,6 @@ export default class SavingsGoal extends Model {
   })
   id!: string;
 
-  @Index
   @ForeignKey(() => User)
   @Column({
     type: DataType.UUID,
