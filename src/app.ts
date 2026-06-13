@@ -6,16 +6,25 @@ import express, {
 } from "express";
 import logger from "morgan";
 import dotenv from "dotenv";
-import cors from "cors";
+import { corsConfig, strictCorsConfig } from "@/shared/middlewares";
 import { ErrorHandler, errorResponse, successResponse } from "@/shared/utils";
 import routesConfigs from '@/routes';
 import endpoints from 'express-list-endpoints';
+import { config } from "@/shared/config";
 
 dotenv.config();
 
 export const app: Application = express();
 
-app.use(cors());
+if (config.serverEnv === 'production') {
+  const allowedOrigins = [
+    'https://dashboard-v1-one.vercel.app',
+    'https://test-dashboard-v1-one.vercel.app'
+  ];
+  app.use(strictCorsConfig(allowedOrigins));
+} else {
+  app.use(corsConfig);
+}
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(logger('dev'));

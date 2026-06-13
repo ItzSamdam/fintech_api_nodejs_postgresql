@@ -138,10 +138,10 @@ export class AdminService {
         await this.userRepo.softDelete(userId);
     }
 
-    // async overrideLimits(userId: string, req: OverrideLimitsRequest): Promise<void> {
+    async overrideLimits(userId: string, req: any): Promise<void> {
         // Implementation for overriding user limits
         // Example: await this.userRepo.overrideLimits(userId, req);
-    // }
+    }
 
     async searchUsers(query: string, offset: number, limit: number): Promise<UserListResponse> {
         const { users, total } = await this.userRepo.search(query, offset, limit);
@@ -504,9 +504,9 @@ export class AdminService {
         };
     }
 
-    // async updateSystemSettings(req: SystemSettingsRequest): Promise<void> {
-    //     // Implementation for updating settings
-    // }
+    async updateSystemSettings(req: any): Promise<void> {
+        // Implementation for updating settings
+    }
 
     async healthCheck(): Promise<any> {
         return { status: "healthy", database: "connected" };
