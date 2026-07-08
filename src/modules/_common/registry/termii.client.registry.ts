@@ -1,3 +1,4 @@
+import { config } from "@/shared/config";
 import axios, { type AxiosInstance } from "axios";
 
 export interface TermiiSMSResponse {
@@ -7,10 +8,12 @@ export interface TermiiSMSResponse {
     user: string;
 }
 
+
 export class TermiiClient {
     private readonly http: AxiosInstance;
+    private readonly apiKey = config.termii.apiKey;
 
-    constructor(private readonly apiKey: string) {
+    constructor() {
         this.http = axios.create({
             baseURL: "https://api.ng.termii.com/api",
             timeout: 30000,
@@ -71,8 +74,11 @@ export interface SMSPayload {
 export class SMSService {
     private readonly smsQueue: SMSPayload[] = [];
     private processing = false;
+    private readonly termiiClient: TermiiClient;
 
-    constructor(private readonly termiiClient: TermiiClient) { }
+    constructor() {
+        this.termiiClient = new TermiiClient(); // Create internally
+    }
 
     private async processQueue(): Promise<void> {
         if (this.processing) return;
@@ -80,7 +86,7 @@ export class SMSService {
 
         while (this.smsQueue.length > 0) {
             const payload = this.smsQueue.shift();
-            if (!payload) break; // guard against undefined without using non-null assertion
+            if (!payload) break;
             try {
                 await this.termiiClient.sendSMS(payload.phone, payload.otp, payload.body, payload.expireMinutes);
             } catch (err) {

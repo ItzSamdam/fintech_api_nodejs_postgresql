@@ -6,3 +6,4 @@ export * from "@/shared/middlewares/cors";
 export * from "@/shared/middlewares/tier-checker";
 export * from "@/shared/middlewares/audit-log";
 export * from "@/shared/middlewares/rate-limiter";
+export * from "@/shared/middlewares/validator";

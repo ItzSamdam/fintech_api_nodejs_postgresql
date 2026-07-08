@@ -1,5 +1,5 @@
 import axios, { type AxiosInstance } from "axios";
-
+import {config} from "@/shared/config";
 export interface RedBillerResponse {
     success: boolean;
     message: string;
@@ -8,9 +8,10 @@ export interface RedBillerResponse {
 
 export class RedBillerClient {
     private readonly http: AxiosInstance;
+    private readonly privateKey = config.redbiller.privateKey;
+    private readonly baseURL = "https://api.redbiller.com";
 
-    constructor(private readonly baseURL: string,
-        private readonly privateKey: string) {
+    constructor() {
         this.http = axios.create({
             baseURL: this.baseURL,  // Explicitly use the class property
             timeout: 30000,

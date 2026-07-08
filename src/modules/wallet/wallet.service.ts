@@ -11,16 +11,7 @@ export class WalletService {
     private readonly userRepo: UserRepository
   ) { }
 
-  async createWallet(userId: string, currency = "NGN"): Promise<WalletResponse> {
-    const existing = await this.walletRepo.getByUserId(userId);
-    if (existing) throw new Error("Wallet already exists for this user");
-
-    const wallet = await this.walletRepo.create({
-      userId,
-      balance: 0,
-      currency,
-    });
-
+  private formatWalletResponse(wallet: any): WalletResponse {
     return {
       id: wallet.id,
       userId: wallet.userId,
@@ -31,6 +22,29 @@ export class WalletService {
       createdAt: wallet.createdAt,
       updatedAt: wallet.updatedAt,
     };
+  }
+
+  async createWallet(userId: string, currency = "NGN"): Promise<WalletResponse> {
+    const existing = await this.walletRepo.getByUserId(userId);
+    if(existing) {
+      return this.formatWalletResponse(existing);
+    }
+
+    const wallet = await this.walletRepo.create({
+      userId,
+      balance: 0,
+      currency,
+    });
+
+    return this.formatWalletResponse(wallet);
+  }
+
+  async getWallet(userId: string): Promise<WalletResponse> {
+    const wallet = await this.walletRepo.getByUserId(userId);
+    if(!wallet) {
+      throw new Error("Wallet not found");
+    }
+    return this.formatWalletResponse(wallet);
   }
 
   async getBalance(userId: string): Promise<BalanceResponse> {

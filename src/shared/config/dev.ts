@@ -29,6 +29,12 @@ const envSchema = z.object({
   ENCRYPTION_KEY: z.string(),
 
   DOMAIN_NAME: z.string().default("MyBackend"),
+
+  TERMII_API_KEY: z.string().default("termii-api-0key"),
+
+  REDBILLER_PRIVATE_KEY:z.string().default("private-key"),
+  REDBILLER_THREED_AUTH_HOOK :z.string().default("3d-auth-hook"),
+
 });
 
 type EnvVars = z.infer<typeof envSchema>;
@@ -70,6 +76,13 @@ export const config = {
   app: {
     domain: envVar.DOMAIN_NAME,
     isDevelopment: envVar.NODE_ENV !== "production",
+  },
+  termii: {
+    apiKey: envVar.TERMII_API_KEY,
+  },
+  redbiller: {
+    privateKey: envVar.REDBILLER_PRIVATE_KEY,
+    threeAuthHook: envVar.REDBILLER_THREED_AUTH_HOOK,
   },
   notifyEmail: envVar.NOTIFICATION_EMAIL,
   port: envVar.PORT,

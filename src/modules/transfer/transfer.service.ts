@@ -3,7 +3,7 @@ import { type TransactionRepository } from "@/modules/_common/repositories/trans
 import { type TransferDetailRepository } from "@/modules/_common/repositories/transfer-detail.repository";
 import { type UserRepository } from "@/modules/_common/repositories/user.repository";
 import { type RedBillerClient } from "@/modules/_common/registry/redbiller.client.registry";
-import { type CacheRepository } from "@/modules/_common/redis/cache.repository";
+// import { type CacheRepository } from "@/modules/_common/redis/cache.repository";
 import { type TransactionResponse, type TransactionHistoryResponse } from "@/modules/_common/interfaces/response/wallet";
 
 export class TransferService {
@@ -13,8 +13,11 @@ export class TransferService {
         private readonly transferDetailRepo: TransferDetailRepository,
         private readonly userRepo: UserRepository,
         private readonly redBiller: RedBillerClient,
-        private readonly cache: CacheRepository
+        // private readonly cache: CacheRepository
     ) { }
+
+
+    private readonly callbackUrl = "https://api.verifaxpay.ng/webhooks/redbiller";
 
     /** Send transfer (wallet or bank) */
     async sendTransfer(userId: string, req: any): Promise<TransactionResponse> {
@@ -87,7 +90,13 @@ export class TransferService {
 
         // External transfer processing
         if (req.recipientType === "bank") {
-            void this.processExternalTransfer(transaction, req);
+            void this.processExternalTransfer(transaction, {
+                accountNo: req.recipientId,
+                bankCode: req.recipientBankCode,
+                amount: req.amount,
+                narration: req.narration,
+                reference
+            });
         }
 
         return this.mapTransactionToResponse(transaction);
@@ -111,14 +120,21 @@ export class TransferService {
     }
 
     /** External transfer processing */
-    private async processExternalTransfer(transaction: any, req: any): Promise<void> {
-        const resp = await this.redBiller.sendMoney({
-            accountNo: req.recipientId,
-            bankCode: req.recipientBankCode,
-            amount: req.amount,
-            narration: req.narration,
-            reference: transaction.reference,
-        });
+    private async processExternalTransfer(transaction: any, req: {
+    accountNo: string;
+    bankCode: string;
+    amount: string;
+    narration: string;
+    reference: string;
+    }): Promise<void> {
+        const resp = await this.redBiller.sendMoney(
+            req.accountNo,
+            req.bankCode,
+            req.amount,
+            req.narration,
+            this.callbackUrl,
+            req.reference,
+        );
 
         if (!resp?.success) {
             await this.transactionRepo.markAsFailed(transaction.reference as string, resp?.message ?? "Transfer failed");

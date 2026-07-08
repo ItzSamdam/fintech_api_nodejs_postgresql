@@ -21,6 +21,17 @@ export class WalletController {
     }
   }
 
+  async getWallet(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const userId = getUserIdFromRequest(req);
+
+      const resp = await this.walletService.getWallet(userId);
+      res.json({ success: true, data: resp });
+    } catch (err) {
+      next(err);
+    }
+  }
+
   async getBalance(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const userId = getUserIdFromRequest(req);

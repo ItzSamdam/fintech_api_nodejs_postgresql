@@ -7,7 +7,7 @@ export class AuthController {
         private readonly authService: AuthService
     ) { }
 
-    async registerPhone(req: Request, res: Response, next: NextFunction): Promise<void> {
+    async register(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const resp = await this.authService.registerPhone(req.body.phoneNumber as string);
             res.json({ success: true, message: "OTP sent successfully", data: resp });
