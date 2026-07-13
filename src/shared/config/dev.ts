@@ -3,7 +3,7 @@ import "dotenv/config";
 
 const envSchema = z.object({
   PORT: z.string().transform(Number).default(3001),
-  NODE_ENV: z.enum(["development", "production", "combined"]),
+  NODE_ENV: z.enum(['development', 'production', 'combined']),
 
   CLOUDINARY_CLOUD_NAME: z.string(),
   CLOUDINARY_API: z.string(),
@@ -18,9 +18,9 @@ const envSchema = z.object({
 
   JWT_SECRET: z.string(),
   JWT_ADMIN_SECRET: z.string(),
-  JWT_EXPIRES: z.string().default("30m"),
+  JWT_EXPIRES: z.string().default('30m'),
   JWT_REFRESH_TOKEN_KEY: z.string(),
-  JWT_REFRESH_EXPIRES: z.string().default("120m"),
+  JWT_REFRESH_EXPIRES: z.string().default('120m'),
 
   LOG_FOLDER: z.string(),
   LOG_FILE: z.string(),
@@ -28,13 +28,16 @@ const envSchema = z.object({
 
   ENCRYPTION_KEY: z.string(),
 
-  DOMAIN_NAME: z.string().default("MyBackend"),
+  DOMAIN_NAME: z.string().default('MyBackend'),
 
-  TERMII_API_KEY: z.string().default("termii-api-0key"),
+  TERMII_API_KEY: z.string().default('termii-api-0key'),
 
-  REDBILLER_PRIVATE_KEY:z.string().default("private-key"),
-  REDBILLER_THREED_AUTH_HOOK :z.string().default("3d-auth-hook"),
+  REDBILLER_PRIVATE_KEY: z.string().default('private-key'),
+  REDBILLER_THREED_AUTH_HOOK: z.string().default('3d-auth-hook'),
 
+  SAFEHAVEN_MB_CLIENT_ID: z.string(),
+  SAFEHAVEN_MB_CLIENT_ASSERTION: z.string(),
+  SAFEHAVEN_DEBIT_ACCOUNT: z.string(),
 });
 
 type EnvVars = z.infer<typeof envSchema>;
@@ -75,7 +78,7 @@ export const config = {
   },
   app: {
     domain: envVar.DOMAIN_NAME,
-    isDevelopment: envVar.NODE_ENV !== "production",
+    isDevelopment: envVar.NODE_ENV !== 'production',
   },
   termii: {
     apiKey: envVar.TERMII_API_KEY,
@@ -83,6 +86,11 @@ export const config = {
   redbiller: {
     privateKey: envVar.REDBILLER_PRIVATE_KEY,
     threeAuthHook: envVar.REDBILLER_THREED_AUTH_HOOK,
+  },
+  safeHavenMb: {
+    clientId: envVar.SAFEHAVEN_MB_CLIENT_ID,
+    clientAssertion: envVar.SAFEHAVEN_MB_CLIENT_ASSERTION,
+    debitAccount: envVar.SAFEHAVEN_DEBIT_ACCOUNT,
   },
   notifyEmail: envVar.NOTIFICATION_EMAIL,
   port: envVar.PORT,

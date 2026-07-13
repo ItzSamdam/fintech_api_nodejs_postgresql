@@ -8,6 +8,7 @@ import { TransferDetailRepository } from "@/modules/_common/repositories/transfe
 import { UserRepository } from "@/modules/_common/repositories/user.repository";
 import { RedBillerClient } from "@/modules/_common/registry/redbiller.client.registry";
 import { authenticateUser, validate } from "@/shared/middlewares";
+import { EnquiryAccountRequestSchema } from "@/modules/_common/schemas/transfer-schema";
 // import { CacheRepository } from "@/modules/_common/redis/cache.repository";
 
 const transferService = new TransferService(
@@ -36,7 +37,7 @@ class TransferRoutesConfig extends BaseRoutesConfig {
         this.app.route("/banks/verify-account")
             .post(
                 authenticateUser,
-                validate(),
+                validate(EnquiryAccountRequestSchema),
                 controller.nameEnquiry.bind(controller)
             );
 
